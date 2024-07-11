@@ -1,7 +1,7 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
+        <div class="flex justify-between h-40 flex-wrap items-center">
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
@@ -11,11 +11,25 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden space-x-6 sm:-my-px sm:ms-8 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+            </div>
+
+            <div class='flex'>
+                <form action="{{route('home')}}" method="GET" class="hidden items-baseline sm:flex">
+                    @csrf
+                    <div class='me-4 my-4'>
+                        <x-bladewind::input name="search" type="search" placeholder="Nazwa produktu" suffix="magnifying-glass" suffix_is_icon="true"/>
+
+                    </div>
+                    <div class='my-4'>
+
+                        <x-bladewind::button color="green" can_submit="true">Wyszukaj</x-bladewind::button>
+                    </div>
+                </form>
             </div>
 
             @auth
@@ -36,7 +50,7 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            {{ __('Mój profil') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -46,7 +60,7 @@
                             <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                {{ __('Wyloguj się') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -55,7 +69,7 @@
             @endauth
             @guest
             <div class='hidden sm:flex sm:items-center sm:ms-6'>
-                <x-bladewind::button color="green">Login</x-bladewind::button>
+                <x-bladewind::button color="green" tag="a" href="{{route('login')}}">Login</x-bladewind::button>
             </div>
             @endguest
 
@@ -80,6 +94,19 @@
             </x-responsive-nav-link>
         </div>
 
+        <div class='hidden sm:hidden' :class="{'block': open, 'hidden': ! open}">
+            <form action="{{route('home')}}" method="GET" class="flex items-baseline">
+                @csrf
+                <div class='me-8 my-8 w-4/5 ms-5'>
+                    <x-bladewind::input name="search" type="search" placeholder="Nazwa produktu" suffix="magnifying-glass" suffix_is_icon="true" size="big"/>
+
+                </div>
+                <div class='my-8 me-5'>
+                    <x-bladewind::button color="green" can_submit="true">Wyszukaj</x-bladewind::button>
+                </div>
+            </form>
+        </div>
+
         @auth
             <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
@@ -90,7 +117,7 @@
 
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
+                    {{ __('Mój profil') }}
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
@@ -100,14 +127,14 @@
                     <x-responsive-nav-link :href="route('logout')"
                             onclick="event.preventDefault();
                                         this.closest('form').submit();">
-                        {{ __('Log Out') }}
+                        {{ __('Wyloguj się') }}
                     </x-responsive-nav-link>
                 </form>
             </div>
         </div>
         @endauth
         @guest
-            <x-bladewind::button color="green">Login</x-bladewind::button>
+            <x-bladewind::button color="green" tag="a" href="{{route('login')}}">Login</x-bladewind::button>
         @endguest
     </div>
 </nav>
