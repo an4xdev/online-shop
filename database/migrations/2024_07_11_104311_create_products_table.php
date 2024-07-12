@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->decimal('price', 10, 2);
             $table->text('image_path');
             $table->integer('counter')->default(0);
-            $table->foreignId('category_id')->constrained('category')->cascadeOnDelete();
+            $table->foreignId('sub_category_id')->constrained('sub_categories')->cascadeOnDelete();
             $table->foreignId('seller_id')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });

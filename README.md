@@ -30,7 +30,18 @@ see [DatabaseSeeder](/database/seeders/DatabaseSeeder.php).
 
 ## Custom data seeding
 
-In [data.py](/seed_data/data.py) are categories and names for products(product name is category and name from list).
+In [data.py](/seed_data/data.py) is structure:
+```js
+products = [
+    {
+        "category": {
+            "sub-category": ["name/compmany", ...]
+        }
+    },
+    ...
+]
+```
+product name is sub-category and name from list.
 
 In [main.py](/seed_data/main.py) you can modify constants.
 

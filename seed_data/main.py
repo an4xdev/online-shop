@@ -4,6 +4,8 @@ import random
 from datetime import datetime, timedelta
 
 PROBALITY: int = 7
+SELLER_ID_START: int = 2
+SELLER_ID_END: int = 5
 USER_ID_START: int = 6
 USER_ID_END: int = 9
 PURCHASE_PER_USER: int = 3
@@ -20,30 +22,38 @@ if __name__ == "__main__":
     formatted_datetime = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
 
     with open("data.sql", "w", encoding="utf-8") as file:
-        cat_id = 1
         sql: Literal[''] = ""
+        sub_cat_id = 1
+        cat_id = 1
         prices: list[float] = []
         prices.append(1.1)
-        for product in products.keys():
-            sql += f"INSERT INTO category('id', 'name', 'created_at', 'updated_at') VALUEs ({
-                cat_id}, '{product}', '{formatted_datetime}', '{formatted_datetime}');\n"
-
-            items: list[str] | None = products.get(product)
-
-            for it in items:
-                price: float = random.randint(
-                    10, 100)
-                if random.randint(1, 10) > PROBALITY:
-                    price += 0.49
-                else:
-                    price += 0.99
-                counter = random.randint(10, 50)
-                seller_id = random.randint(2, 5)
-                sql += f"INSERT INTO products('id','name', 'price', 'image_path', 'counter', 'category_id', 'seller_id', 'created_at', 'updated_at') VALUES (NULL,'{
-                    product + " "+it}', {price}, '{PICTURE}', {counter}, {cat_id}, {seller_id}, '{formatted_datetime}', '{formatted_datetime}');\n"
-                prices.append(price)
-
-            cat_id += 1
+        for category_dict in products:
+            for category_name, items_dict in category_dict.items():
+                # print(f"Category: {category_name}")
+                sql += f"INSERT INTO categories('id', 'name', 'created_at', 'updated_at') VALUES ({
+                    cat_id}, '{category_name}', '{formatted_datetime}', '{formatted_datetime}');\n"
+                for item_name, brands in items_dict.items():
+                    # print(f"  Item: {item_name}")
+                    sql += f"INSERT INTO sub_categories('id', 'name', 'category_id','created_at', 'updated_at') VALUEs ({
+                        sub_cat_id}, '{item_name}', {cat_id},'{formatted_datetime}', '{formatted_datetime}');\n"
+                    for brand in brands:
+                        # print(f"    Brand: {brand}")
+                        price: float = random.randint(
+                            10, 100)
+                        if random.randint(1, 10) > PROBALITY:
+                            price += 0.49
+                        else:
+                            price += 0.99
+                        counter = random.randint(10, 50)
+                        seller_id = random.randint(2, 5)
+                        counter = random.randint(10, 50)
+                        seller_id = random.randint(
+                            SELLER_ID_START, SELLER_ID_END)
+                        sql += f"INSERT INTO products('id','name', 'price', 'image_path', 'counter', 'sub_category_id', 'seller_id', 'created_at', 'updated_at') VALUES (NULL,'{
+                            item_name + " "+brand}', {price}, '{PICTURE}', {counter}, {sub_cat_id}, {seller_id}, '{formatted_datetime}', '{formatted_datetime}');\n"
+                        prices.append(price)
+                    sub_cat_id += 1
+                cat_id += 1
         purchase_id = 1
         for user_id in range(USER_ID_START, USER_ID_END+1):
             for j in range(PURCHASE_PER_USER):

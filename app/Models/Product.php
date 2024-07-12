@@ -3,19 +3,19 @@
 namespace App\Models;
 
 use App\Models\User;
-use App\Models\Category;
 use App\Models\Purchase;
+use App\Models\SubCategory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'price', 'image_path', 'counter', 'category_id', 'seller_id'];
+    protected $fillable = ['name', 'price', 'image_path', 'counter', 'sub_category_id', 'seller_id'];
 
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(SubCategory::class, 'sub_category_id');
     }
 
     public function seller()
