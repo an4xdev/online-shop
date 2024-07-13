@@ -1,3 +1,11 @@
+- [Online shop project](#online-shop-project)
+  - [Project](#project)
+  - [Used](#used)
+  - [Requirements](#requirements)
+  - [User types](#user-types)
+  - [Custom data seeding](#custom-data-seeding)
+  - [Start project](#start-project)
+
 # Online shop project
 
 ## Project
@@ -9,6 +17,7 @@ Project created to learn and practise Laravel.
 - [Laravel](https://laravel.com/) - MIT License
 - [BladewindUI](https://bladewindui.com/) - MIT License
 - [Lorem Picsum](https://picsum.photos/) - MIT License
+- [purl](https://github.com/allmarkedup/purl) - MIT License
 
 ## Requirements
 
@@ -31,16 +40,18 @@ see [DatabaseSeeder](/database/seeders/DatabaseSeeder.php).
 ## Custom data seeding
 
 In [data.py](/seed_data/data.py) is structure:
+
 ```js
 products = [
     {
         "category": {
-            "sub-category": ["name/compmany", ...]
+            "sub-category": ["name/company", ...]
         }
     },
     ...
 ]
 ```
+
 product name is sub-category and name from list.
 
 In [main.py](/seed_data/main.py) you can modify constants.
@@ -58,7 +69,6 @@ Seed database:
 ```bash
 > php artisan db:seed
 ```
-
 
 ## Start project
 
@@ -78,4 +88,16 @@ Run node.js:
 
 ```bash
 > npm run dev
+```
+
+Run migrations:
+
+```bash
+> php artisan migrate:refresh
+```
+
+Seed database:
+
+```bash
+> php artisan db:seed
 ```

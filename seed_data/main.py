@@ -1,5 +1,6 @@
 from typing import Literal
 from data import products
+from data import lorem
 import random
 from datetime import datetime, timedelta
 
@@ -45,12 +46,11 @@ if __name__ == "__main__":
                         else:
                             price += 0.99
                         counter = random.randint(10, 50)
-                        seller_id = random.randint(2, 5)
                         counter = random.randint(10, 50)
                         seller_id = random.randint(
                             SELLER_ID_START, SELLER_ID_END)
-                        sql += f"INSERT INTO products('id','name', 'price', 'image_path', 'counter', 'sub_category_id', 'seller_id', 'created_at', 'updated_at') VALUES (NULL,'{
-                            item_name + " "+brand}', {price}, '{PICTURE}', {counter}, {sub_cat_id}, {seller_id}, '{formatted_datetime}', '{formatted_datetime}');\n"
+                        sql += f"INSERT INTO products('id','name', 'description','price', 'image_path', 'counter', 'sub_category_id', 'seller_id', 'created_at', 'updated_at') VALUES (NULL,'{
+                            item_name + " "+brand}', '{lorem}', {price}, '{PICTURE}', {counter}, {sub_cat_id}, {seller_id}, '{formatted_datetime}', '{formatted_datetime}');\n"
                         prices.append(price)
                     sub_cat_id += 1
                 cat_id += 1

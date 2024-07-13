@@ -201,6 +201,8 @@ products = [
     }
 ]
 
+lorem = '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum quam lectus, vestibulum non orci ac, viverra placerat sapien. Duis quis orci a dui aliquam venenatis. Nullam auctor semper odio vitae tincidunt. In imperdiet pulvinar consequat. Ut dapibus blandit enim, et lobortis eros pellentesque et. Nulla sem est, dictum ac velit nec, pretium porta lectus. Integer porta suscipit elementum. Proin aliquam imperdiet purus. Cras sit amet sagittis turpis.'''
+
 if __name__ == "__main__":
     for category_dict in products:
         for category_name, items_dict in category_dict.items():

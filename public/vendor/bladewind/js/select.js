@@ -272,8 +272,8 @@ class BladewindSelect {
         if (user_function !== null && user_function !== undefined) {
             callUserFunction(
                 `${user_function}(
-                '${item.getAttribute('data-value')}', 
-                '${item.getAttribute('data-label')}',
+                '${item.getAttribute("data-value")}',
+                '${item.getAttribute("data-label")}',
                 '${dom_el(this.formInput).value}')`
             );
         }

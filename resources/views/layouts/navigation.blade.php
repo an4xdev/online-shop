@@ -19,11 +19,10 @@
             </div>
 
             <div class='flex'>
-                <form action="{{route('home')}}" method="GET" class="hidden items-baseline sm:flex">
+                <form action="{{route('search.searchByName')}}" method="GET" class="hidden items-baseline sm:flex">
                     @csrf
                     <div class='me-2 my-2'>
-                        <x-bladewind::input name="search" type="search" placeholder="Nazwa produktu" suffix="magnifying-glass" suffix_is_icon="true"/>
-
+                        <x-bladewind::input name="search" type="search" placeholder="Nazwa produktu"/>
                     </div>
                     <div class='my-2'>
                         <x-bladewind::button color="green" can_submit="true">Wyszukaj</x-bladewind::button>
@@ -94,10 +93,10 @@
         </div>
 
         <div class='hidden sm:hidden' :class="{'block': open, 'hidden': ! open}">
-            <form action="{{route('home')}}" method="GET" class="flex items-baseline">
+            <form action="{{route('search.searchByName')}}" method="GET" class="flex items-baseline">
                 @csrf
                 <div class='me-8 my-8 w-4/5 ms-5'>
-                    <x-bladewind::input name="search" type="search" placeholder="Nazwa produktu" suffix="magnifying-glass" suffix_is_icon="true" size="big"/>
+                    <x-bladewind::input name="search" type="search" placeholder="Nazwa produktu" size="big"/>
 
                 </div>
                 <div class='my-8 me-5'>
