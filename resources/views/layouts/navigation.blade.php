@@ -48,6 +48,10 @@
                             {{ __('Moje zakupy') }}
                         </x-dropdown-link>
 
+                        <x-dropdown-link :href="route('cart.index')">
+                            {{ __('Mój koszyk') }}
+                        </x-dropdown-link>
+
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -108,6 +112,14 @@
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Mój profil') }}
                 </x-responsive-nav-link>
+
+                <x-dropdown-link :href="route('purchase.user',  Auth::user())">
+                            {{ __('Moje zakupy') }}
+                        </x-dropdown-link>
+
+                        <x-dropdown-link :href="route('cart.index')">
+                            {{ __('Mój koszyk') }}
+                        </x-dropdown-link>
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">

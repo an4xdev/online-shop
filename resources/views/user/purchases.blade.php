@@ -12,7 +12,6 @@
                             </div>
                         </div>
                     </x-slot:header>
-
                     <div class="grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-1 gap-4">
                     @foreach ($purchase->products as $p)
                         <x-bladewind::card class='mx-4'>

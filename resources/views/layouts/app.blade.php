@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="description" content="Sklep interentowy firmy budowlanej Budomex. Różne akcesoria budowlane dostępne od zaraz z szybką dostawą.">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
@@ -37,5 +38,8 @@
                 {{ $slot }}
             </main>
         </div>
+        <x-bladewind::notification />
+        <!-- Include Notifications component -->
+        @include('components.Notifications')
     </body>
 </html>

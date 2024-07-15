@@ -19,7 +19,12 @@
     </div>
     <div class='flex justify-between'>
         <div>
-            <x-bladewind::button tag='a' href='#' icon='shopping-cart' icon_right="true">Dodaj do koszyka</x-bladewind::button>
+            <form action="{{route('cart.store')}}" method="post">
+                @csrf
+                <input type="hidden" name="product_id" value="{{$product->id}}">
+                <input type="hidden" name="quantity" value="1">
+                <x-bladewind::button can_submit="true" icon='shopping-cart' icon_right="true">Dodaj do koszyka</x-bladewind::button>
+            </form>
         </div>
         <div>
             <x-bladewind::button tag='a' href='#' icon='wallet' icon_right="true" color='green'>Kup teraz</x-bladewind::button>
