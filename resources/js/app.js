@@ -11,7 +11,7 @@ const detailsElements = document.querySelectorAll("details");
 detailsElements.forEach((details) => {
     details.querySelector("summary").addEventListener("click", () => {
         detailsElements.forEach((otherDetails) => {
-            if (otherDetails !== details && window.innerWidth < 1024) {
+            if (otherDetails !== details) {
                 if (otherDetails.id !== "mobile-categories") {
                     otherDetails.removeAttribute("open");
                 }

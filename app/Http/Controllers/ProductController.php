@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Category;
+use App\Models\SubCategory;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -61,5 +63,12 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //
+    }
+
+    public function show_by_category(SubCategory $sub_category)
+    {
+        $categories = Category::with('subCategories')->get();
+        $products = Product::with('category')->where('sub_category_id', "=", $sub_category->id)->get();
+        return view('product.show-by-category', compact("products", "categories"));
     }
 }

@@ -45,14 +45,15 @@ In [data.py](/seed_data/data.py) is structure:
 products = [
     {
         "category": {
-            "sub-category": ["name/company", ...]
+            "sub-category": ["name of subacategory in singular form if necessary", "suffix like: l(liters) or kg(kilograms) or ...",("company", "company", "company", ...)],
+            ...
         }
     },
     ...
 ]
 ```
 
-product name is sub-category and name from list.
+product name is" sub-category (element[0]) + company (one of element[2]) + unit (element[1]).
 
 In [main.py](/seed_data/main.py) you can modify constants.
 

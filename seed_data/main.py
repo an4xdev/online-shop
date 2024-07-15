@@ -15,6 +15,15 @@ PURCHASE_MAX_ITEMS: int = 5
 PURCHASE_ITEM_COUNTER_MIN: int = 1
 PURCHASE_ITEM_COUNTER_MAX: int = 3
 PICTURE: str = "https://picsum.photos/200"
+PRODUCTS_IN_SHOP_MIN: int = 10
+PRODUCTS_IN_SHOP_MAX: int = 50
+PRODUCT_PRICE_MIN: int = 10
+PRODUCT_PRICE_MAX: int = 100
+FLOATING_1: float = .49
+FLOATING_2: float = .99
+DAYS_BACK_MIN: int = 1
+DAYS_BACK_MAX: int = 30
+PRODUCT_COUNT_LIST = [1, 2, 5, 10]
 
 if __name__ == "__main__":
 
@@ -30,34 +39,47 @@ if __name__ == "__main__":
         prices.append(1.1)
         for category_dict in products:
             for category_name, items_dict in category_dict.items():
-                # print(f"Category: {category_name}")
                 sql += f"INSERT INTO categories('id', 'name', 'created_at', 'updated_at') VALUES ({
                     cat_id}, '{category_name}', '{formatted_datetime}', '{formatted_datetime}');\n"
-                for item_name, brands in items_dict.items():
-                    # print(f"  Item: {item_name}")
+                for sub_category, item_data in items_dict.items():
                     sql += f"INSERT INTO sub_categories('id', 'name', 'category_id','created_at', 'updated_at') VALUEs ({
-                        sub_cat_id}, '{item_name}', {cat_id},'{formatted_datetime}', '{formatted_datetime}');\n"
-                    for brand in brands:
-                        # print(f"    Brand: {brand}")
-                        price: float = random.randint(
-                            10, 100)
-                        if random.randint(1, 10) > PROBALITY:
-                            price += 0.49
+                        sub_cat_id}, '{sub_category}', {cat_id},'{formatted_datetime}', '{formatted_datetime}');\n"
+                    for company in item_data[2]:
+                        if item_data[1] != "sztuka":
+                            for count in PRODUCT_COUNT_LIST:
+                                price: float = random.randint(
+                                    PRODUCT_PRICE_MIN, PRODUCT_PRICE_MAX)
+                                if random.randint(1, 10) > PROBALITY:
+                                    price += FLOATING_1
+                                else:
+                                    price += FLOATING_2
+                                counter = random.randint(
+                                    PRODUCTS_IN_SHOP_MIN, PRODUCTS_IN_SHOP_MAX)
+                                seller_id = random.randint(
+                                    SELLER_ID_START, SELLER_ID_END)
+                                sql += f"INSERT INTO products('id','name', 'description','price', 'image_path', 'counter', 'sub_category_id', 'seller_id', 'created_at', 'updated_at') VALUES (NULL,'{
+                                    item_data[0] + " "+company + " " + str(count) + " " + item_data[1]}', '{lorem}', {price}, '{PICTURE}', {counter}, {sub_cat_id}, {seller_id}, '{formatted_datetime}', '{formatted_datetime}');\n"
+                                prices.append(price)
                         else:
-                            price += 0.99
-                        counter = random.randint(10, 50)
-                        counter = random.randint(10, 50)
-                        seller_id = random.randint(
-                            SELLER_ID_START, SELLER_ID_END)
-                        sql += f"INSERT INTO products('id','name', 'description','price', 'image_path', 'counter', 'sub_category_id', 'seller_id', 'created_at', 'updated_at') VALUES (NULL,'{
-                            item_name + " "+brand}', '{lorem}', {price}, '{PICTURE}', {counter}, {sub_cat_id}, {seller_id}, '{formatted_datetime}', '{formatted_datetime}');\n"
-                        prices.append(price)
+                            price: float = random.randint(
+                                PRODUCT_PRICE_MIN, PRODUCT_PRICE_MAX)
+                            if random.randint(1, 10) > PROBALITY:
+                                price += FLOATING_1
+                            else:
+                                price += FLOATING_2
+                            counter = random.randint(
+                                PRODUCTS_IN_SHOP_MIN, PRODUCTS_IN_SHOP_MAX)
+                            seller_id = random.randint(
+                                SELLER_ID_START, SELLER_ID_END)
+                            sql += f"INSERT INTO products('id','name', 'description','price', 'image_path', 'counter', 'sub_category_id', 'seller_id', 'created_at', 'updated_at') VALUES (NULL,'{
+                                item_data[0] + " "+company + " 1 " + item_data[1]}', '{lorem}', {price}, '{PICTURE}', {counter}, {sub_cat_id}, {seller_id}, '{formatted_datetime}', '{formatted_datetime}');\n"
+                            prices.append(price)
                     sub_cat_id += 1
                 cat_id += 1
         purchase_id = 1
         for user_id in range(USER_ID_START, USER_ID_END+1):
             for j in range(PURCHASE_PER_USER):
-                days_back = random.randint(1, 30)
+                days_back = random.randint(DAYS_BACK_MIN, DAYS_BACK_MAX)
                 earlier_date = datetime.now() - timedelta(days=days_back)
                 cudate = earlier_date.strftime('%Y-%m-%d %H:%M:%S')
                 purchase_date = earlier_date.strftime('%Y-%m-%d')

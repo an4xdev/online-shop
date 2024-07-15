@@ -5,23 +5,16 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                    <a href="{{ route('home') }}">
+                        <x-application-logo class="block h-36 w-auto fill-current text-gray-800" />
                     </a>
-                </div>
-
-                <!-- Navigation Links -->
-                <div class="hidden space-x-2 sm:-my-px sm:ms-8 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
                 </div>
             </div>
 
             <div class='flex'>
                 <form action="{{route('search.searchByName')}}" method="GET" class="hidden items-baseline sm:flex">
                     @csrf
-                    <div class='me-2 my-2'>
+                    <div class='me-2 my-2 w-96'>
                         <x-bladewind::input name="search" type="search" placeholder="Nazwa produktu"/>
                     </div>
                     <div class='my-2'>
@@ -86,12 +79,6 @@
 
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-        </div>
-
         <div class='hidden sm:hidden' :class="{'block': open, 'hidden': ! open}">
             <form action="{{route('search.searchByName')}}" method="GET" class="flex items-baseline">
                 @csrf

@@ -22,4 +22,5 @@ Route::middleware('auth')->group(function () {
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('product.show');
 Route::get('/search', [SearchController::class, 'searchByName'])->name('search.searchByName');
 Route::get('/searchByCategory', [SearchController::class, 'searchByNameAndCategory'])->name('search.searchByNameAndCategory');
+Route::get('/products/category/{sub_category}', [ProductController::class, 'show_by_category'])->name('product.showByCategory');
 require __DIR__.'/auth.php';
