@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\ShoppingCartController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SessionController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\ShoppingCartController;
 
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
 Route::redirect('/dashboard', '/')->name('dashboard');
@@ -33,5 +34,8 @@ Route::get('/products/category/{sub_category}', [ProductController::class, 'show
 
 Route::get('/search', [SearchController::class, 'searchByName'])->name('search.searchByName');
 Route::get('/searchByCategory', [SearchController::class, 'searchByNameAndCategory'])->name('search.searchByNameAndCategory');
+
+Route::post('/clear-session-messages', [SessionController::class, 'clearMessages']);
+
 
 require __DIR__.'/auth.php';

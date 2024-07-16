@@ -37,6 +37,23 @@
                 });
             }
             showErrorNotifications(@json($error));
+
+            $.ajax({
+                url: '/clear-session-messages',
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: JSON.stringify({ clear: true }),
+                contentType: 'application/json',
+                success: function(response) {
+                    console.log('Session messages cleared');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Failed to clear session messages:', error);
+                }
+            });
         });
+
     </script>
 @endif

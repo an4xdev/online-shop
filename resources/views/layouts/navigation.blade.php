@@ -14,7 +14,7 @@
             <div class='flex'>
                 <form action="{{route('search.searchByName')}}" method="GET" class="hidden items-baseline sm:flex">
                     @csrf
-                    <div class='me-2 my-2 w-96'>
+                    <div class='me-2 my-2 lg:w-96 md:w-64'>
                         <x-bladewind::input name="search" type="search" placeholder="Nazwa produktu"/>
                     </div>
                     <div class='my-2'>
@@ -92,7 +92,6 @@
                 @csrf
                 <div class='me-8 my-8 w-4/5 ms-5'>
                     <x-bladewind::input name="search" type="search" placeholder="Nazwa produktu" size="big"/>
-
                 </div>
                 <div class='my-8 me-5'>
                     <x-bladewind::button color="green" can_submit="true">Wyszukaj</x-bladewind::button>

@@ -8,14 +8,14 @@ use Illuminate\Support\Facades\Session;
 
 class ShoppingCartController extends Controller
 {
-    public function index()
+
+    public function itemsInCart()
     {
+        $productsInCart = [];
         if (Session::has('cart')) {
             $cart = Session::get('cart');
 
-            $productsInCart = [];
-
-            foreach ($cart as $productId => $item) {
+            foreach ($cart as $item) {
                 $product = $item['product'];
                 $quantity = $item['quantity'];
 
@@ -24,11 +24,16 @@ class ShoppingCartController extends Controller
                     'quantity' => $quantity,
                 ];
             }
-
-            return view('cart.index', compact('productsInCart'));
         }
-        session()->flash('info', ["Twój koszyk jest pusty."]);
-        return view('cart.index');
+
+        return $productsInCart;
+    }
+
+    public function index()
+    {
+        $productsInCart = $this->itemsInCart();
+
+        return view('cart.index', compact('productsInCart'));
     }
 
     //
@@ -38,7 +43,7 @@ class ShoppingCartController extends Controller
         $productId = $request->input('product_id');
         $quantity = $request->input('quantity');
 
-        $product = Product::find($productId)->firstOrFail();
+        $product = Product::where('id', $productId)->first();
 
         if (!Session::has('cart')) {
             Session::put('cart', []);
@@ -46,19 +51,27 @@ class ShoppingCartController extends Controller
 
         $cart = Session::get('cart');
 
-        if (isset($cart[$productId])) {
-            session()->flash('warning', ["Produkt jest już w koszyku."]);
-            return back();
+
+        foreach ($cart as $productId => $item) {
+            if ($item['product']->id == $productId) {
+                session()->flash('warning', ["Produkt jest już w koszyku."]);
+                $productsInCart = $this->itemsInCart();
+                return view('cart.index', compact('productsInCart'));
+            }
         }
 
-        $cart[$productId] = [
+        $newProduct = [
             'product' => $product,
             'quantity' => $quantity,
         ];
 
+        $cart[] = $newProduct;
+
         Session::put('cart', $cart);
+
         session()->flash('success', ["Dodano przedmiot do koszyka."]);
-        return back();
+        $productsInCart = $this->itemsInCart();
+        return view('cart.index', compact('productsInCart'));
     }
 
     public function updateCart(Request $request)
@@ -68,15 +81,34 @@ class ShoppingCartController extends Controller
 
         $cart = Session::get('cart');
 
-        if (isset($cart[$productId])) {
-            $cart[$productId]['quantity'] = $quantity;
+        $found = false;
+        $quantity_over_count = false;
 
-            Session::put('cart', $cart);
-            session()->flash('info', ["Ilość produktu została zaktualizowana."]);
-            return view('cart.index');
+        foreach ($cart as $key => $item) {
+            if ($item['product']->id == $productId) {
+
+                $found = true;
+                if ($item['product']->counter < $quantity) {
+                    $quantity_over_count = true;
+                    session()->flash('error', ["Zamawiana ilość przekraca stan magazynowy."]);
+                    break;
+                }
+
+                $cart[$key]['quantity'] = $quantity;
+
+                Session::put('cart', $cart);
+                session()->flash('info', ["Ilość produktu została zaktualizowana."]);
+
+                break;
+            }
         }
-        session()->flash('error', ["Produkt nie został znaleziony w koszyku."]);
-        return view('cart.index');
+
+        if (!$found && !$quantity_over_count) {
+            session()->flash('error', ["Produkt nie został znaleziony w koszyku."]);
+        }
+
+        $productsInCart = $this->itemsInCart();
+        return view('cart.index', compact('productsInCart'));
     }
 
     public function removeFromCart(Request $request)
@@ -84,21 +116,28 @@ class ShoppingCartController extends Controller
         $productId = $request->input('product_id');
         $cart = Session::get('cart');
 
-        if (isset($cart[$productId])) {
-            unset($cart[$productId]);
+        foreach ($cart as $key => $item) {
+            if ($item['product']->id == $productId) {
+                unset($cart[$key]);
 
-            Session::put('cart', $cart);
-            session()->flash('success', ["Produkt został usunięty z koszyka."]);
-            return view('cart.index');
+                Session::put('cart', $cart);
+                session()->flash('success', ["Produkt został usunięty z koszyka."]);
+
+                $productsInCart = $this->itemsInCart();
+                return view('cart.index', compact('productsInCart'));
+            }
         }
+
         session()->flash('error', ['Produkt nie został znaleziony w koszyku.']);
-        return view('cart.index');
+        $productsInCart = $this->itemsInCart();
+        return view('cart.index', compact('productsInCart'));
     }
 
     public function clearCart()
     {
         Session::forget('cart');
         session()->flash('success', ['Koszyk został wyczyszczony.']);
-        return view('cart.index');
+        $productsInCart = $this->itemsInCart();
+        return view('cart.index', compact('productsInCart'));
     }
 }
