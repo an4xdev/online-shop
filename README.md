@@ -5,6 +5,8 @@
   - [User types](#user-types)
   - [Custom data seeding](#custom-data-seeding)
   - [Start project](#start-project)
+    - [Run laravel](#run-laravel)
+    - [Install js dependencies](#install-js-dependencies)
 
 # Online shop project
 
@@ -45,7 +47,9 @@ In [data.py](/seed_data/data.py) is structure:
 products = [
     {
         "category": {
-            "sub-category": ["name of subacategory in singular form if necessary", "suffix like: l(liters) or kg(kilograms) or ...",("company", "company", "company", ...)],
+            "sub-category": ["name of subacategory in singular form if necessary", 
+            "suffix like: l(liters) or kg(kilograms) or ...",
+            ("company", "company", "company", ...)],
             ...
         }
     },
@@ -62,7 +66,7 @@ Run [main.py](/seed_data/main.py) and generated file ```data.sql``` move to ```/
 Run migrations:
 
 ```bash
-> php artisan migrate:refresh
+> php artisan migrate
 ```
 
 Seed database:
@@ -73,13 +77,13 @@ Seed database:
 
 ## Start project
 
-Run laravel:
+### Run laravel
 
 ```bash
 > php artisan serve
 ```
 
-Install js dependencies:
+### Install js dependencies
 
 ```bash
 > npm install
@@ -94,7 +98,7 @@ Run node.js:
 Run migrations:
 
 ```bash
-> php artisan migrate:refresh
+> php artisan migrate
 ```
 
 Seed database:
