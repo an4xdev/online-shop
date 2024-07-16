@@ -26,6 +26,8 @@ DAYS_BACK_MAX: int = 30
 PRODUCT_COUNT_LIST = [1, 2, 5, 10]
 DELIVERY_STATUS_ID_START: int = 1
 DELIVERY_STATUS_ID_END: int = 4
+DELIVERY_METHOD_ID_START: int = 1
+DELIVERY_METHOD_ID_END: int = 3
 
 if __name__ == "__main__":
 
@@ -90,8 +92,11 @@ if __name__ == "__main__":
 
                 delivered = True if delivery_status == DELIVERY_STATUS_ID_END else False
 
-                sql += f"INSERT INTO purchases('id', 'date', 'user_id', 'total_price', 'created_at', 'updated_at', 'delivery_id', 'delivered') VALUES({
-                    purchase_id}, '{purchase_date}', {user_id}, 1.1, '{cudate}', '{cudate}', {delivery_status}, {1 if delivered else 0});\n"
+                delivery_method = random.randint(
+                    DELIVERY_METHOD_ID_START, DELIVERY_METHOD_ID_END)
+
+                sql += f"INSERT INTO purchases('id', 'date', 'user_id', 'total_price', 'created_at', 'updated_at', 'delivery_status_id', 'delivered', 'delivery_method_id') VALUES({
+                    purchase_id}, '{purchase_date}', {user_id}, 1.1, '{cudate}', '{cudate}', {delivery_status}, {1 if delivered else 0}, {delivery_method});\n"
 
                 items_in_purchase = random.randint(
                     PURCHASE_MIN_ITEMS, PURCHASE_MAX_ITEMS)

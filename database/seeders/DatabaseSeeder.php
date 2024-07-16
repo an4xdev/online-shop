@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\DeliveryMethod;
 use App\Models\DeliveryStatus;
 use App\Models\Role;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -103,6 +104,21 @@ class DatabaseSeeder extends Seeder
 
         DeliveryStatus::factory()->create([
             'name' => 'Zamówienie dostarczone',
+        ]);
+
+        DeliveryMethod::factory()->create([
+            'name' => 'Odbiór osobisty',
+            'price' => 0.0
+        ]);
+
+        DeliveryMethod::factory()->create([
+            'name' => 'Kurier dzisiaj',
+            'price' => 29.99
+        ]);
+
+        DeliveryMethod::factory()->create([
+            'name' => 'Kurier',
+            'price' => 16.99
         ]);
 
         $sql = file_get_contents(database_path('\seeds\data.sql'));

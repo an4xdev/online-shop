@@ -1,5 +1,6 @@
 <x-app-layout>
     <x-bladewind::centered-content size="xxl">
+        @if (count($orders) > 0)
             @foreach ($orders as $order)
                 <x-bladewind::card class='my-4'>
                     <x-slot:header>
@@ -8,7 +9,7 @@
                                 <span class='font-semibold'>Data:</span> {{ \Carbon\Carbon::parse($order->date)->isoFormat('D MMMM YYYY') }}
                             </div>
                             <div>
-                                <span class="font-semibold">Status: </span> {{$order->delivery->name}}
+                                <span class="font-semibold">Status: </span> {{$order->delivery_status->name}}
                             </div>
                             <div>
                                 <span class='font-semibold'>Zapłacona kwota:</span> {{$order->total_price}} zł
@@ -44,5 +45,10 @@
                     </div>
                 </x-bladewind::card>
             @endforeach
+        @else
+            <x-bladewind::alert shade="dark" show_close_icon="false">
+                Nie masz żadnych zamówień. Może chcesz zobaczyć swoje <a href="{{route('purchase.user', Auth::user())}}" class='underline hover:text-blue-100'>zakupy</a>
+            </x-bladewind::alert>
+        @endif
     </x-bladewind::centered-content>
 </x-app-layout>

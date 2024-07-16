@@ -5,14 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DeliveryStatus extends Model
+class DeliveryMethod extends Model
 {
     use HasFactory;
-
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'price'];
 
     public function purchases()
     {
-        return $this->hasMany(Purchase::class, 'delivery_status_id');
+        return $this->hasMany(Purchase::class, 'delivery_method_id');
     }
 }

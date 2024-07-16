@@ -12,7 +12,8 @@ return new class extends Migration {
     {
         Schema::table('purchases', function (Blueprint $table) {
             //
-            $table->foreignId('delivery_status_id')->constrained('delivery_statuses')->cascadeOnDelete();
+            $table->foreignId('delivery_method_id')->constrained('delivery_methods')->cascadeOnDelete();
+            $table->boolean('delivered')->default(false);
         });
     }
 
@@ -26,6 +27,7 @@ return new class extends Migration {
             $table->dropForeign(['delivery_status_id']);
 
             $table->dropColumn('delivery_status_id');
+            $table->dropColumn('delivered');
         });
     }
 };
