@@ -13,7 +13,7 @@
                 </p>
             </div>
             <div class='mb-4'>
-                <x-bladewind::button tag='a' href='#' icon='arrow-up-right' icon_right="true" type="secondary">{{$product->category->name}}</x-bladewind::button>
+                <x-bladewind::button tag='a' href="{{route('product.showByCategory', $product->category)}}" icon='arrow-up-right' icon_right="true" type="secondary">{{$product->category->name}}</x-bladewind::button>
             </div>
         </div>
     </div>
@@ -27,6 +27,7 @@
             </form>
         </div>
         <div>
+            {{-- TODO: --}}
             <x-bladewind::button tag='a' href='#' icon='wallet' icon_right="true" color='green'>Kup teraz</x-bladewind::button>
         </div>
     </div>

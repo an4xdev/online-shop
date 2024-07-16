@@ -9,7 +9,7 @@ SELLER_ID_START: int = 2
 SELLER_ID_END: int = 5
 USER_ID_START: int = 6
 USER_ID_END: int = 9
-PURCHASE_PER_USER: int = 3
+PURCHASE_PER_USER: int = 5
 PURCHASE_MIN_ITEMS: int = 1
 PURCHASE_MAX_ITEMS: int = 5
 PURCHASE_ITEM_COUNTER_MIN: int = 1
@@ -24,6 +24,8 @@ FLOATING_2: float = .99
 DAYS_BACK_MIN: int = 1
 DAYS_BACK_MAX: int = 30
 PRODUCT_COUNT_LIST = [1, 2, 5, 10]
+DELIVERY_STATUS_ID_START: int = 1
+DELIVERY_STATUS_ID_END: int = 4
 
 if __name__ == "__main__":
 
@@ -83,8 +85,13 @@ if __name__ == "__main__":
                 earlier_date = datetime.now() - timedelta(days=days_back)
                 cudate = earlier_date.strftime('%Y-%m-%d %H:%M:%S')
                 purchase_date = earlier_date.strftime('%Y-%m-%d')
-                sql += f"INSERT INTO purchases('id', 'date', 'user_id', 'total_price', 'created_at', 'updated_at') VALUES({
-                    purchase_id}, '{purchase_date}', {user_id}, 1.1, '{cudate}', '{cudate}');\n"
+                delivery_status = random.randint(
+                    DELIVERY_STATUS_ID_START, DELIVERY_STATUS_ID_END)
+
+                delivered = True if delivery_status == DELIVERY_STATUS_ID_END else False
+
+                sql += f"INSERT INTO purchases('id', 'date', 'user_id', 'total_price', 'created_at', 'updated_at', 'delivery_id', 'delivered') VALUES({
+                    purchase_id}, '{purchase_date}', {user_id}, 1.1, '{cudate}', '{cudate}', {delivery_status}, {1 if delivered else 0});\n"
 
                 items_in_purchase = random.randint(
                     PURCHASE_MIN_ITEMS, PURCHASE_MAX_ITEMS)

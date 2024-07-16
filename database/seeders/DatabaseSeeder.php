@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\DeliveryStatus;
 use App\Models\Role;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\User;
@@ -15,7 +16,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
 
         Role::factory()->create(
             [
@@ -87,6 +87,22 @@ class DatabaseSeeder extends Seeder
             'name' => 'user4',
             'email' => 'user4@example.com',
             'role_id' => 3,
+        ]);
+
+        DeliveryStatus::factory()->create([
+            'name' => 'Opłacono zamówienie',
+        ]);
+
+        DeliveryStatus::factory()->create([
+            'name' => 'Przygotowano zamówienie',
+        ]);
+
+        DeliveryStatus::factory()->create([
+            'name' => 'Wysłano zamówienie',
+        ]);
+
+        DeliveryStatus::factory()->create([
+            'name' => 'Zamówienie dostarczone',
         ]);
 
         $sql = file_get_contents(database_path('\seeds\data.sql'));

@@ -12,6 +12,7 @@ class ShoppingCartController extends Controller
     public function itemsInCart()
     {
         $productsInCart = [];
+        $totalPrice = 0;
         if (Session::has('cart')) {
             $cart = Session::get('cart');
 
@@ -23,17 +24,24 @@ class ShoppingCartController extends Controller
                     'product' => $product,
                     'quantity' => $quantity,
                 ];
+
+                $totalPrice += $product->price * $quantity;
             }
         }
 
-        return $productsInCart;
+        return [
+            'productsInCart' => $productsInCart,
+            'totalPrice' => $totalPrice,
+        ];
     }
 
     public function index()
     {
-        $productsInCart = $this->itemsInCart();
+        $result = $this->itemsInCart();
+        $productsInCart = $result['productsInCart'];
+        $totalPrice = $result['totalPrice'];
 
-        return view('cart.index', compact('productsInCart'));
+        return view('cart.index', compact('productsInCart', 'totalPrice'));
     }
 
     //
@@ -55,8 +63,10 @@ class ShoppingCartController extends Controller
         foreach ($cart as $productId => $item) {
             if ($item['product']->id == $productId) {
                 session()->flash('warning', ["Produkt jest już w koszyku."]);
-                $productsInCart = $this->itemsInCart();
-                return view('cart.index', compact('productsInCart'));
+                $result = $this->itemsInCart();
+                $productsInCart = $result['productsInCart'];
+                $totalPrice = $result['totalPrice'];
+                return view('cart.index', compact('productsInCart', 'totalPrice'));
             }
         }
 
@@ -70,8 +80,10 @@ class ShoppingCartController extends Controller
         Session::put('cart', $cart);
 
         session()->flash('success', ["Dodano przedmiot do koszyka."]);
-        $productsInCart = $this->itemsInCart();
-        return view('cart.index', compact('productsInCart'));
+        $result = $this->itemsInCart();
+        $productsInCart = $result['productsInCart'];
+        $totalPrice = $result['totalPrice'];
+        return view('cart.index', compact('productsInCart', 'totalPrice'));
     }
 
     public function updateCart(Request $request)
@@ -107,8 +119,10 @@ class ShoppingCartController extends Controller
             session()->flash('error', ["Produkt nie został znaleziony w koszyku."]);
         }
 
-        $productsInCart = $this->itemsInCart();
-        return view('cart.index', compact('productsInCart'));
+        $result = $this->itemsInCart();
+        $productsInCart = $result['productsInCart'];
+        $totalPrice = $result['totalPrice'];
+        return view('cart.index', compact('productsInCart', 'totalPrice'));
     }
 
     public function removeFromCart(Request $request)
@@ -123,21 +137,27 @@ class ShoppingCartController extends Controller
                 Session::put('cart', $cart);
                 session()->flash('success', ["Produkt został usunięty z koszyka."]);
 
-                $productsInCart = $this->itemsInCart();
-                return view('cart.index', compact('productsInCart'));
+                $result = $this->itemsInCart();
+                $productsInCart = $result['productsInCart'];
+                $totalPrice = $result['totalPrice'];
+                return view('cart.index', compact('productsInCart', 'totalPrice'));
             }
         }
 
         session()->flash('error', ['Produkt nie został znaleziony w koszyku.']);
-        $productsInCart = $this->itemsInCart();
-        return view('cart.index', compact('productsInCart'));
+        $result = $this->itemsInCart();
+        $productsInCart = $result['productsInCart'];
+        $totalPrice = $result['totalPrice'];
+        return view('cart.index', compact('productsInCart', 'totalPrice'));
     }
 
     public function clearCart()
     {
         Session::forget('cart');
         session()->flash('success', ['Koszyk został wyczyszczony.']);
-        $productsInCart = $this->itemsInCart();
-        return view('cart.index', compact('productsInCart'));
+        $result = $this->itemsInCart();
+        $productsInCart = $result['productsInCart'];
+        $totalPrice = $result['totalPrice'];
+        return view('cart.index', compact('productsInCart', 'totalPrice'));
     }
 }

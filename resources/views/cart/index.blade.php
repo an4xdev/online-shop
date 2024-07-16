@@ -1,7 +1,15 @@
 <x-app-layout>
     <x-bladewind::centered-content size="xxl">
         @if(count($productsInCart) > 0)
-        <ul>
+            <x-bladewind::card class="hover:shadow-gray-300">
+                <div class="flex justify-between">
+                    <div><span class="font-semibold">Kwota zakupu: </span> {{$totalPrice}}zł</div>
+                    <div>
+                        {{-- TODO: --}}
+                        <x-bladewind::button tag='a' href='#' icon='wallet' icon_right="true" color="green">Przejdź do dostawy i płatności</x-bladewind::button>
+                    </div>
+                </div>
+            </x-bladewind::card>
             @foreach($productsInCart as $productInCart)
                 <x-bladewind::card class="hover:shadow-gray-300">
                     <div class='flex'>
@@ -18,7 +26,7 @@
                                 </p>
                             </div>
                             <div class='mb-4'>
-                                <x-bladewind::button tag='a' href='#' icon='arrow-up-right' icon_right="true" type="secondary">{{$productInCart['product']->category->name}}</x-bladewind::button>
+                                <x-bladewind::button tag='a' href="{{route('product.showByCategory', $productInCart['product']->category)}}" icon='arrow-up-right' icon_right="true" type="secondary">{{$productInCart['product']->category->name}}</x-bladewind::button>
                             </div>
                             <div class="mb-4">
                                 <p>
@@ -52,7 +60,6 @@
                     </div>
                 </x-bladewind::card>
             @endforeach
-        </ul>
         @else
             <div class='mt-4'>
                 <x-bladewind::alert shade="dark" show_close_icon="false">Twój koszyk jest pusty.</x-bladewind::alert>

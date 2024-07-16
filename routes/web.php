@@ -20,7 +20,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/purchases/{user}', [PurchaseController::class, 'show'])->name('purchase.user');
+    Route::get('/purchases/{user}', [PurchaseController::class, 'showPurchases'])->name('purchase.user');
+    Route::get('/orders/{user}', [PurchaseController::class, 'showOrders'])->name('order.user');
     Route::get('/cart', [ShoppingCartController::class, 'index'])->name('cart.index');
     Route::post('/cart', [ShoppingCartController::class, 'store'])->name('cart.store');
     Route::put('/cart', [ShoppingCartController::class, 'updateCart'])->name('cart.update');

@@ -11,7 +11,7 @@ class Purchase extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['date', 'user_id', 'total_price'];
+    protected $fillable = ['date', 'user_id', 'total_price, delivery_id'];
 
     public function user()
     {
@@ -22,5 +22,10 @@ class Purchase extends Model
     {
         return $this->belongsToMany(Product::class, 'purchase_products', 'purchase_id', 'product_id')
             ->withPivot('counter');
+    }
+
+    public function delivery()
+    {
+        return $this->belongsTo(DeliveryStatus::class, 'delivery_id');
     }
 }
