@@ -9,11 +9,11 @@ class PurchaseProduct extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['purchase_id', 'product_id', 'counter'];
+    protected $fillable = ['purchase_by_seller_id', 'product_id', 'counter'];
 
     public function purchase()
     {
-        return $this->belongsTo(Purchase::class, 'purchase_id');
+        return $this->belongsTo(PurchaseBySeller::class, 'purchase_by_seller_id');
     }
 
     public function product()

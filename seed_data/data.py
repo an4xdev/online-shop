@@ -1,17 +1,11 @@
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Union
 
-Company = str
-Unit = str
-ProductName = str
-ProductsGroup = str
+ProductType = List[str]
+ProductInfoType = List[Union[str, Tuple[str, str, str, str]]]
+CategoryType = Dict[str, ProductInfoType]
+ProductsType = List[Dict[str, CategoryType]]
 
-Product = Tuple[ProductName, Unit, List[Company]]
-
-ProductGroupDict = Dict[ProductName, Product]
-
-Products = List[Dict[ProductsGroup, ProductGroupDict]]
-
-products: Products = [
+products: ProductsType = [
     {
         "Materiały budowlane": {
             "Cement portlandzki": ["Cement portlandzki", "kg", ("Lafarge", "Holcim", "Cemex", "HeidelbergCement")],

@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import List, Literal, Tuple
 from data import products
 from data import lorem
 import random
@@ -36,11 +36,11 @@ if __name__ == "__main__":
     formatted_datetime = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
 
     with open("data.sql", "w", encoding="utf-8") as file:
-        sql: Literal[''] = ""
-        sub_cat_id = 1
-        cat_id = 1
-        prices: list[float] = []
-        prices.append(1.1)
+        sql: str = ""
+        sub_cat_id: int = 1
+        cat_id: int = 1
+        prices: List[Tuple[float, int]] = []
+        prices.append((1.1, 1))
         for category_dict in products:
             for category_name, items_dict in category_dict.items():
                 sql += f"INSERT INTO categories('id', 'name', 'created_at', 'updated_at') VALUES ({
@@ -61,11 +61,13 @@ if __name__ == "__main__":
                                     PRODUCTS_IN_SHOP_MIN, PRODUCTS_IN_SHOP_MAX)
                                 seller_id = random.randint(
                                     SELLER_ID_START, SELLER_ID_END)
+                                product_name = f"{item_data[0]} {
+                                    company} {count} {item_data[1]}"
                                 sql += f"INSERT INTO products('id','name', 'description','price', 'image_path', 'counter', 'sub_category_id', 'seller_id', 'created_at', 'updated_at') VALUES (NULL,'{
-                                    item_data[0] + " "+company + " " + str(count) + " " + item_data[1]}', '{lorem}', {price}, '{PICTURE}', {counter}, {sub_cat_id}, {seller_id}, '{formatted_datetime}', '{formatted_datetime}');\n"
-                                prices.append(price)
+                                    product_name}', '{lorem}', {price}, '{PICTURE}', {counter}, {sub_cat_id}, {seller_id}, '{formatted_datetime}', '{formatted_datetime}');\n"
+                                prices.append((price, seller_id))
                         else:
-                            price: float = random.randint(
+                            price = random.randint(
                                 PRODUCT_PRICE_MIN, PRODUCT_PRICE_MAX)
                             if random.randint(1, 10) > PROBALITY:
                                 price += FLOATING_1
@@ -75,9 +77,11 @@ if __name__ == "__main__":
                                 PRODUCTS_IN_SHOP_MIN, PRODUCTS_IN_SHOP_MAX)
                             seller_id = random.randint(
                                 SELLER_ID_START, SELLER_ID_END)
+                            product_name = f"{item_data[0]} {
+                                company} {count} {item_data[1]}"
                             sql += f"INSERT INTO products('id','name', 'description','price', 'image_path', 'counter', 'sub_category_id', 'seller_id', 'created_at', 'updated_at') VALUES (NULL,'{
-                                item_data[0] + " "+company + " 1 " + item_data[1]}', '{lorem}', {price}, '{PICTURE}', {counter}, {sub_cat_id}, {seller_id}, '{formatted_datetime}', '{formatted_datetime}');\n"
-                            prices.append(price)
+                                product_name}', '{lorem}', {price}, '{PICTURE}', {counter}, {sub_cat_id}, {seller_id}, '{formatted_datetime}', '{formatted_datetime}');\n"
+                            prices.append((price, seller_id))
                     sub_cat_id += 1
                 cat_id += 1
         purchase_id = 1
@@ -109,8 +113,8 @@ if __name__ == "__main__":
                     counter = random.randint(
                         PURCHASE_ITEM_COUNTER_MIN, PURCHASE_ITEM_COUNTER_MAX)
 
-                    item_price = prices[product_id]
-                    total_price += item_price * counter
+                    item_price, seller_id = prices[product_id]
+                    total_price += item_price * item_price
 
                     sql += f"INSERT INTO purchase_products('id', 'purchase_id', 'product_id', 'counter', 'created_at', 'updated_at') VALUES (NULL, {
                         purchase_id}, {product_id}, {counter}, '{cudate}', '{cudate}');\n"

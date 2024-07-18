@@ -10,10 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('purchases', function (Blueprint $table) {
-            //
+        Schema::create('purchase_by_sellers', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('purchase_id')->constrained('purchases')->cascadeOnDelete();
+            $table->foreignId('delivery_status_id')->constrained('delivery_statuses')->cascadeOnDelete();
             $table->foreignId('delivery_method_id')->constrained('delivery_methods')->cascadeOnDelete();
+            $table->foreignId('seller_id')->constrained('users')->cascadeOnDelete();
             $table->boolean('delivered')->default(false);
+            $table->timestamps();
         });
     }
 
@@ -22,12 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('purchases', function (Blueprint $table) {
-            //
-            $table->dropForeign(['delivery_status_id']);
-
-            $table->dropColumn('delivery_status_id');
-            $table->dropColumn('delivered');
-        });
+        Schema::dropIfExists('purchase_by_sellers');
     }
 };
