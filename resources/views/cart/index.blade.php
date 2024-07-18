@@ -5,8 +5,7 @@
                 <div class="flex justify-between">
                     <div><span class="font-semibold">Kwota zakupu: </span> {{$totalPrice}}zł</div>
                     <div>
-                        {{-- TODO: --}}
-                        <x-bladewind::button tag='a' href='#' icon='wallet' icon_right="true" color="green">Przejdź do dostawy i płatności</x-bladewind::button>
+                        <x-bladewind::button tag='a' href="{{route('purchase.create')}}" icon='wallet' icon_right="true" color="green">Przejdź do dostawy i płatności</x-bladewind::button>
                     </div>
                 </div>
             </x-bladewind::card>
@@ -53,7 +52,7 @@
                                     <x-bladewind::input label="Ilość w zakupie" error_message="Minimalnie można zakupić 1 ofertę przedmiotu" name="quantity" value="{{$productInCart['quantity']}}" min="1" max="{{$productInCart['product']->counter}}" numeric="true" show_error_inline="true" class='mr-2' />
                                 </div>
                                 <div>
-                                    <x-bladewind::button can_submit="true" icon='shopping-cart' icon_right="true">Zmień ilość</x-bladewind::button>
+                                    <x-bladewind::button can_submit="true" icon='pencil-square' icon_right="true">Zmień ilość</x-bladewind::button>
                                 </div>
                             </form>
                         </div>

@@ -42,7 +42,7 @@
                     </div>
                     <x-slot:footer>
                         <div class="flex justify-end">
-                            <div class='mr-4 mb-4'>
+                            <div class='mr-4 mb-4 mt-4'>
                                 {{-- TODO: --}}
                                 <x-bladewind::button tag='a' href='#' icon='wallet' icon_right="true" color='green'>Zamów jeszcze raz</x-bladewind::button>
                             </div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DeliveryMethod;
 use App\Models\User;
 use App\Models\Purchase;
 use Illuminate\View\View;
@@ -10,10 +11,12 @@ use Illuminate\Support\Facades\Session;
 
 class PurchaseController extends Controller
 {
-    public function create(): View
+    private function items()
     {
         $productsInCart = [];
+        $delivery = null;
         $totalPrice = 0;
+        $priceWithDelivery = 0;
         if (Session::has('cart')) {
             $cart = Session::get('cart');
 
@@ -28,9 +31,76 @@ class PurchaseController extends Controller
 
                 $totalPrice += $product->price * $quantity;
             }
+
+            if (Session::has('delivery')) {
+                $delivery = Session::get('delivery');
+                $priceWithDelivery = $totalPrice + $delivery['price'];
+            } else {
+                $delivery = [
+                    'id' => 1,
+                    'price' => 0,
+                ];
+                Session::put('delivery', $delivery);
+            }
+
         }
-        return view('cart.index', compact('productsInCart', 'totalPrice'));
+        $deliveryTypes = DeliveryMethod::all();
+        return [
+            'productsInCart' => $productsInCart,
+            'totalPrice' => $totalPrice,
+            'priceWithDelivery' => $priceWithDelivery,
+            'deliveryTypes' => $deliveryTypes,
+            'delivery' => $delivery
+        ];
     }
+
+    public function create(): View
+    {
+        $data = $this->items();
+
+        $productsInCart = $data['productsInCart'];
+        $totalPrice = $data['totalPrice'];
+        $priceWithDelivery = $data['priceWithDelivery'];
+        $deliveryTypes = $data['deliveryTypes'];
+        $delivery = $data['delivery'];
+
+        return view('purchase.create', compact('productsInCart', 'totalPrice', 'priceWithDelivery', 'deliveryTypes', 'delivery'));
+    }
+
+    public function changeDeliveryMethod(Request $request)
+    {
+        $fields = $request->validate([
+            'deliveryType' => ['required', 'numeric']
+        ]);
+        if (Session::has('delivery')) {
+            $delivery = Session::get('delivery');
+
+            $methods = DeliveryMethod::findOrFail($fields['deliveryType']);
+
+            $delivery = [
+                'id' => $methods->id,
+                'price' => $methods->price,
+            ];
+            Session::put('delivery', $delivery);
+        } else {
+            $delivery = [
+                'id' => 1,
+                'price' => 0,
+            ];
+            Session::put('delivery', $delivery);
+        }
+
+        $data = $this->items();
+
+        $productsInCart = $data['productsInCart'];
+        $totalPrice = $data['totalPrice'];
+        $priceWithDelivery = $data['priceWithDelivery'];
+        $deliveryTypes = $data['deliveryTypes'];
+        $delivery = $data['delivery'];
+
+        return view('purchase.create', compact('productsInCart', 'totalPrice', 'priceWithDelivery', 'deliveryTypes', 'delivery'));
+    }
+
     //
     public function showPurchases(User $user): View
     {

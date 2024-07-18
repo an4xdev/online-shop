@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Session;
 class ShoppingCartController extends Controller
 {
 
-    public function itemsInCart()
+    private function itemsInCart()
     {
         $productsInCart = [];
         $totalPrice = 0;
@@ -66,7 +66,10 @@ class ShoppingCartController extends Controller
                 $result = $this->itemsInCart();
                 $productsInCart = $result['productsInCart'];
                 $totalPrice = $result['totalPrice'];
-                return view('cart.index', compact('productsInCart', 'totalPrice'));
+                return redirect()->back()->with([
+                    'productsInCart' => $productsInCart,
+                    'totalPrice' => $totalPrice
+                ]);
             }
         }
 
@@ -83,7 +86,10 @@ class ShoppingCartController extends Controller
         $result = $this->itemsInCart();
         $productsInCart = $result['productsInCart'];
         $totalPrice = $result['totalPrice'];
-        return view('cart.index', compact('productsInCart', 'totalPrice'));
+        return redirect()->back()->with([
+            'productsInCart' => $productsInCart,
+            'totalPrice' => $totalPrice
+        ]);
     }
 
     public function updateCart(Request $request)
@@ -122,7 +128,10 @@ class ShoppingCartController extends Controller
         $result = $this->itemsInCart();
         $productsInCart = $result['productsInCart'];
         $totalPrice = $result['totalPrice'];
-        return view('cart.index', compact('productsInCart', 'totalPrice'));
+        return redirect()->back()->with([
+            'productsInCart' => $productsInCart,
+            'totalPrice' => $totalPrice
+        ]);
     }
 
     public function removeFromCart(Request $request)
@@ -140,7 +149,11 @@ class ShoppingCartController extends Controller
                 $result = $this->itemsInCart();
                 $productsInCart = $result['productsInCart'];
                 $totalPrice = $result['totalPrice'];
-                return view('cart.index', compact('productsInCart', 'totalPrice'));
+                return redirect()->back()->with([
+                    'productsInCart' => $productsInCart,
+                    'totalPrice' => $totalPrice
+                ]);
+
             }
         }
 
@@ -148,7 +161,10 @@ class ShoppingCartController extends Controller
         $result = $this->itemsInCart();
         $productsInCart = $result['productsInCart'];
         $totalPrice = $result['totalPrice'];
-        return view('cart.index', compact('productsInCart', 'totalPrice'));
+        return redirect()->back()->with([
+            'productsInCart' => $productsInCart,
+            'totalPrice' => $totalPrice
+        ]);
     }
 
     public function clearCart()

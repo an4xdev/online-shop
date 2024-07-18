@@ -5,8 +5,13 @@
   - [User types](#user-types)
   - [Custom data seeding](#custom-data-seeding)
   - [Start project](#start-project)
-    - [Run laravel](#run-laravel)
-    - [Install js dependencies](#install-js-dependencies)
+    - [Use batch script](#use-batch-script)
+    - [Run separately](#run-separately)
+      - [Run laravel](#run-laravel)
+      - [Install js dependencies](#install-js-dependencies)
+      - [Run node.js](#run-nodejs)
+      - [Run migrations](#run-migrations)
+      - [Seed database](#seed-database)
 
 # Online shop project
 
@@ -57,7 +62,7 @@ products = [
 ]
 ```
 
-product name is" sub-category (element[0]) + company (one of element[2]) + unit (element[1]).
+product name is" sub-category (```element[0]```) + company (one of ```element[2]```) + unit (```element[1]```).
 
 In [main.py](/seed_data/main.py) you can modify constants.
 
@@ -77,31 +82,39 @@ Seed database:
 
 ## Start project
 
-### Run laravel
+### Use batch script
+
+```bash
+> run.bat
+```
+
+### Run separately
+
+#### Run laravel
 
 ```bash
 > php artisan serve
 ```
 
-### Install js dependencies
+#### Install js dependencies
 
 ```bash
 > npm install
 ```
 
-Run node.js:
+#### Run node.js
 
 ```bash
 > npm run dev
 ```
 
-Run migrations:
+#### Run migrations
 
 ```bash
 > php artisan migrate
 ```
 
-Seed database:
+#### Seed database
 
 ```bash
 > php artisan db:seed
