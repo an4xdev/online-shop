@@ -1,15 +1,18 @@
-from typing import List, Literal, Tuple
+from typing import List, Tuple
 from data import products
 from data import lorem
 import random
 from datetime import datetime, timedelta
 
+PROBALITY_MIN: int = 1
+PROBALITY_MAX: int = 10
 PROBALITY: int = 7
 SELLER_ID_START: int = 2
 SELLER_ID_END: int = 5
 USER_ID_START: int = 6
 USER_ID_END: int = 9
 PURCHASE_PER_USER: int = 5
+PURCHASE_BY_SELLER: int = 2
 PURCHASE_MIN_ITEMS: int = 1
 PURCHASE_MAX_ITEMS: int = 5
 PURCHASE_ITEM_COUNTER_MIN: int = 1
@@ -31,16 +34,27 @@ DELIVERY_METHOD_ID_END: int = 3
 
 if __name__ == "__main__":
 
-    current_datetime = datetime.now()
+    assert PROBALITY_MAX > PROBALITY_MIN, "Max probality must be greater than min probality"
+    assert PROBALITY_MAX > PROBALITY and PROBALITY > PROBALITY_MIN, "Probality must be between max and min"
+    assert SELLER_ID_START < SELLER_ID_END, "Seller end id must be greater than start id"
+    assert USER_ID_START < USER_ID_END, "User end id must be greater than start id"
+    assert PURCHASE_ITEM_COUNTER_MIN < PURCHASE_ITEM_COUNTER_MAX, "Purchase max item count must be greater than min product counter"
+    assert PRODUCTS_IN_SHOP_MIN < PRODUCTS_IN_SHOP_MAX, "Max items in shop must be greater than min products in shop"
+    assert DAYS_BACK_MIN < DAYS_BACK_MAX, "Max day back must be greater than min day back"
+    assert DELIVERY_STATUS_ID_START < DELIVERY_STATUS_ID_END, "Delivery status id end must be greater than delivery status id start"
+    assert DELIVERY_METHOD_ID_START < DELIVERY_METHOD_ID_END, "Delivery method id end must be greater than delivery method id start"
 
-    formatted_datetime = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+    current_datetime: datetime = datetime.now()
+
+    formatted_datetime: str = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
 
     with open("data.sql", "w", encoding="utf-8") as file:
         sql: str = ""
         sub_cat_id: int = 1
         cat_id: int = 1
-        prices: List[Tuple[float, int]] = []
-        prices.append((1.1, 1))
+        price_and_seller: List[Tuple[float, int, int]] = []
+        price_and_seller.append((0.0, 0, 0))
+        product_id: int = 1
         for category_dict in products:
             for category_name, items_dict in category_dict.items():
                 sql += f"INSERT INTO categories('id', 'name', 'created_at', 'updated_at') VALUES ({
@@ -53,19 +67,21 @@ if __name__ == "__main__":
                             for count in PRODUCT_COUNT_LIST:
                                 price: float = random.randint(
                                     PRODUCT_PRICE_MIN, PRODUCT_PRICE_MAX)
-                                if random.randint(1, 10) > PROBALITY:
+                                if random.randint(PROBALITY_MIN, PROBALITY_MAX) > PROBALITY:
                                     price += FLOATING_1
                                 else:
                                     price += FLOATING_2
-                                counter = random.randint(
+                                counter: int = random.randint(
                                     PRODUCTS_IN_SHOP_MIN, PRODUCTS_IN_SHOP_MAX)
-                                seller_id = random.randint(
+                                seller_id: int = random.randint(
                                     SELLER_ID_START, SELLER_ID_END)
-                                product_name = f"{item_data[0]} {
+                                product_name: str = f"{item_data[0]} {
                                     company} {count} {item_data[1]}"
-                                sql += f"INSERT INTO products('id','name', 'description','price', 'image_path', 'counter', 'sub_category_id', 'seller_id', 'created_at', 'updated_at') VALUES (NULL,'{
+                                sql += f"INSERT INTO products('id','name', 'description','price', 'image_path', 'counter', 'sub_category_id', 'seller_id', 'created_at', 'updated_at') VALUES ({product_id},'{
                                     product_name}', '{lorem}', {price}, '{PICTURE}', {counter}, {sub_cat_id}, {seller_id}, '{formatted_datetime}', '{formatted_datetime}');\n"
-                                prices.append((price, seller_id))
+                                product_id += 1
+                                price_and_seller.append(
+                                    (price, product_id, seller_id))
                         else:
                             price = random.randint(
                                 PRODUCT_PRICE_MIN, PRODUCT_PRICE_MAX)
@@ -79,45 +95,74 @@ if __name__ == "__main__":
                                 SELLER_ID_START, SELLER_ID_END)
                             product_name = f"{item_data[0]} {
                                 company} {count} {item_data[1]}"
-                            sql += f"INSERT INTO products('id','name', 'description','price', 'image_path', 'counter', 'sub_category_id', 'seller_id', 'created_at', 'updated_at') VALUES (NULL,'{
+                            sql += f"INSERT INTO products('id','name', 'description','price', 'image_path', 'counter', 'sub_category_id', 'seller_id', 'created_at', 'updated_at') VALUES ({product_id},'{
                                 product_name}', '{lorem}', {price}, '{PICTURE}', {counter}, {sub_cat_id}, {seller_id}, '{formatted_datetime}', '{formatted_datetime}');\n"
-                            prices.append((price, seller_id))
+                            product_id += 1
+                            price_and_seller.append(
+                                (price, product_id, seller_id))
                     sub_cat_id += 1
                 cat_id += 1
-        purchase_id = 1
+        purchase_id: int = 1
+        purchase_by_seller_id: int = 1
         for user_id in range(USER_ID_START, USER_ID_END+1):
-            for j in range(PURCHASE_PER_USER):
-                days_back = random.randint(DAYS_BACK_MIN, DAYS_BACK_MAX)
-                earlier_date = datetime.now() - timedelta(days=days_back)
-                cudate = earlier_date.strftime('%Y-%m-%d %H:%M:%S')
-                purchase_date = earlier_date.strftime('%Y-%m-%d')
-                delivery_status = random.randint(
+            for _ in range(PURCHASE_PER_USER):
+                days_back: int = random.randint(DAYS_BACK_MIN, DAYS_BACK_MAX)
+                earlier_date: datetime = datetime.now() - timedelta(days=days_back)
+                cudate: str = earlier_date.strftime('%Y-%m-%d %H:%M:%S')
+                purchase_date: str = earlier_date.strftime('%Y-%m-%d')
+
+                sql += f"INSERT INTO purchases('id', 'date', 'user_id', 'total_price', 'created_at', 'updated_at') VALUES({
+                    purchase_id}, '{purchase_date}', {user_id}, 1.1, '{cudate}', '{cudate}');\n"
+
+                sellers: List[int] = []
+                total_price: float = 0.0
+                for _ in range(PURCHASE_BY_SELLER):
+                    seller: int = random.randint(
+                        SELLER_ID_START, SELLER_ID_END)
+                    while seller in sellers:
+                        seller = random.randint(
+                            SELLER_ID_START, SELLER_ID_END)
+                    sellers.append(seller)
+
+                    items: List[Tuple[float, int]] = list(map(lambda it: (it[0], it[1]), filter(
+                        lambda ps: (ps[2] == seller), price_and_seller)))
+
+                    count_items_in_purchase = random.randint(
+                        PURCHASE_MIN_ITEMS, PURCHASE_MAX_ITEMS)
+
+                    delivery_status = random.randint(
                     DELIVERY_STATUS_ID_START, DELIVERY_STATUS_ID_END)
 
-                delivered = True if delivery_status == DELIVERY_STATUS_ID_END else False
+                    delivered = True if delivery_status == DELIVERY_STATUS_ID_END else False
 
-                delivery_method = random.randint(
+                    delivery_method = random.randint(
                     DELIVERY_METHOD_ID_START, DELIVERY_METHOD_ID_END)
 
-                sql += f"INSERT INTO purchases('id', 'date', 'user_id', 'total_price', 'created_at', 'updated_at', 'delivery_status_id', 'delivered', 'delivery_method_id') VALUES({
-                    purchase_id}, '{purchase_date}', {user_id}, 1.1, '{cudate}', '{cudate}', {delivery_status}, {1 if delivered else 0}, {delivery_method});\n"
+                    sql += f"INSERT INTO purchase_by_sellers('id', 'purchase_id', 'delivery_status_id', 'delivery_method_id', 'delivered', 'seller_id', 'created_at', 'updated_at') VALUES({
+                        purchase_by_seller_id}, {purchase_id}, {delivery_status}, {delivery_method}, {1 if delivered else 0}, {seller}, '{cudate}', '{cudate}');\n"
 
-                items_in_purchase = random.randint(
-                    PURCHASE_MIN_ITEMS, PURCHASE_MAX_ITEMS)
+                    items_in_purchase: List[Tuple[float, int]] = []
 
-                total_price: float = 0.0
-                for k in range(items_in_purchase):
+                    for _ in range(count_items_in_purchase):
 
-                    product_id = random.randint(1, len(prices) - 1)
+                        random_item: Tuple[float, int] = items[random.randint(
+                            0, len(items) - 1)]
 
-                    counter = random.randint(
+                        while random_item in items_in_purchase:
+                            random_item = items[random.randint(
+                                0, len(items) - 1)]
+
+                        items_in_purchase.append(random_item)
+
+                        counter = random.randint(
                         PURCHASE_ITEM_COUNTER_MIN, PURCHASE_ITEM_COUNTER_MAX)
 
-                    item_price, seller_id = prices[product_id]
-                    total_price += item_price * item_price
+                        total_price += counter * random_item[0]
 
-                    sql += f"INSERT INTO purchase_products('id', 'purchase_id', 'product_id', 'counter', 'created_at', 'updated_at') VALUES (NULL, {
-                        purchase_id}, {product_id}, {counter}, '{cudate}', '{cudate}');\n"
+                        sql += f"INSERT INTO purchase_products('id', 'purchase_by_seller_id', 'product_id', 'counter', 'created_at', 'updated_at') VALUES (NULL, {
+                            purchase_by_seller_id}, {random_item[1]}, {counter}, '{cudate}', '{cudate}');\n"
+
+                    purchase_by_seller_id += 1
                 total_price = round(total_price, 2)
                 sql += f"UPDATE purchases SET total_price = {
                     total_price} WHERE id = {purchase_id};\n"

@@ -121,7 +121,7 @@ class DatabaseSeeder extends Seeder
             'price' => 16.99
         ]);
 
-        $sql = file_get_contents(database_path('\seeds\data.sql'));
-        DB::unprepared($sql);
+        // $sql = file_get_contents(database_path('\seeds\data.sql'));
+        // DB::unprepared($sql);
     }
 }
