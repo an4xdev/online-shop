@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Session;
 
 class ShoppingCartController extends Controller
@@ -31,8 +32,11 @@ class ShoppingCartController extends Controller
             }
         }
 
+        $collection = collect($productsInCart);
+        $grouped = $collection->groupBy('seller_id')->sortKeys();
+
         return [
-            'productsInCart' => $productsInCart,
+            'productsInCart' => $grouped->toArray(),
             'totalPrice' => $totalPrice,
         ];
     }
@@ -43,11 +47,7 @@ class ShoppingCartController extends Controller
         $productsInCart = $result['productsInCart'];
         $totalPrice = $result['totalPrice'];
 
-        // $collection = collect($productsInCart);
-
-        // $grouped = $collection->groupBy('seller_id');
-
-        // dd($grouped);
+        dd($productsInCart);
 
         return view('cart.index', compact('productsInCart', 'totalPrice'));
     }

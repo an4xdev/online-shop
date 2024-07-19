@@ -12,7 +12,7 @@ class WelcomeController extends Controller
     public function index()
     {
         $categories = Category::with('subCategories')->get();
-        $randomProducts = Product::with('category')->inRandomOrder()->limit(24)->get();
+        $randomProducts = Product::with('category')->inRandomOrder()->limit(12)->get();
         return view('welcome', compact('categories', 'randomProducts'));
     }
 }

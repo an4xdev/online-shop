@@ -14,19 +14,19 @@ class PurchaseController extends Controller
     private function items()
     {
         $productsInCart = [];
-        $delivery = null;
         $totalPrice = 0;
-        $priceWithDelivery = 0;
         if (Session::has('cart')) {
             $cart = Session::get('cart');
 
             foreach ($cart as $item) {
                 $product = $item['product'];
                 $quantity = $item['quantity'];
+                $seller_id = $item['seller_id'];
 
                 $productsInCart[] = [
                     'product' => $product,
                     'quantity' => $quantity,
+                    'seller_id' => $seller_id,
                 ];
 
                 $totalPrice += $product->price * $quantity;
@@ -42,11 +42,13 @@ class PurchaseController extends Controller
                 ];
                 Session::put('delivery', $delivery);
             }
-
         }
+
+        $collection = collect($productsInCart);
+        $grouped = $collection->groupBy('seller_id')->sortKeys();
         $deliveryTypes = DeliveryMethod::all();
         return [
-            'productsInCart' => $productsInCart,
+            'productsInCart' => $grouped,
             'totalPrice' => $totalPrice,
             'priceWithDelivery' => $priceWithDelivery,
             'deliveryTypes' => $deliveryTypes,

@@ -16,8 +16,9 @@
                     </div>
                 </div>
             </x-bladewind::card>
-            @foreach($productsInCart as $productInCart)
-                <x-bladewind::card class="hover:shadow-gray-300">
+            @foreach($productsInCart as $sellerId => $products)
+                @foreach($products as $productInCart)
+                    <x-bladewind::card class="hover:shadow-gray-300">
                     <div class='flex'>
                         <div class='mb-4 flex-1'>
                             <img src="{{$productInCart['product']->image_path}}" alt="{{$productInCart['product']->name}}">
@@ -65,6 +66,7 @@
                         </div>
                     </div>
                 </x-bladewind::card>
+                @endforeach
             @endforeach
         @else
             <div class='mt-4'>
