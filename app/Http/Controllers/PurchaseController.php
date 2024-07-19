@@ -105,20 +105,46 @@ class PurchaseController extends Controller
     public function showPurchases(User $user): View
     {
         if ($user->id != auth()->id()) {
-            abort(403, "Próbujesz zobaczyć zakup, którego nie dokonałeś.");
+            abort(403, "Próbujesz zobaczyć zakupy, innego użytkownika.");
         }
-        $purchases = Purchase::with('products')->where('user_id', $user->id)->where('delivery_status_id', 4)->get();
+
+        $purchases = Purchase::where('user_id', $user->id)
+            ->whereHas('bySellers', function ($query) {
+                $query->where('delivery_status_id', 4);
+            })
+            ->with([
+                'bySellers' => function ($query) {
+                    $query->where('delivery_status_id', 4)
+                        ->with('products.product');
+                }
+            ])
+            ->get();
+
+        // dd($purchases);
+
         return view('user.purchases', compact("purchases"));
     }
 
     public function showOrders(User $user): View
     {
         if ($user->id != auth()->id()) {
-            abort(403, "Próbujesz zobaczyć zamówienie, którego nie dokonałeś.");
+            abort(403, "Próbujesz zobaczyć zamówienie innego użytkownika.");
         }
 
-        $orders = Purchase::with('products')->with('delivery_status')->where('user_id', $user->id)->where('delivery_status_id', "!=", 4)->get();
 
+        $orders = Purchase::where('user_id', $user->id)
+            ->whereHas('bySellers', function ($query) {
+                $query->where('delivery_status_id', '!=', 4);
+            })
+            ->with([
+                'bySellers' => function ($query) {
+                    $query->where('delivery_status_id', '!=', 4)
+                        ->with('products.product');
+                }
+            ])
+            ->get();
+
+        // dd($orders);
         return view('user.orders', compact("orders"));
     }
 }

@@ -13,6 +13,6 @@ class DeliveryStatus extends Model
 
     public function purchases()
     {
-        return $this->hasMany(Purchase::class, 'delivery_status_id');
+        return $this->hasMany(PurchaseBySeller::class, 'delivery_status_id');
     }
 }

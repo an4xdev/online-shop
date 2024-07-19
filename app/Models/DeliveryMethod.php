@@ -12,6 +12,6 @@ class DeliveryMethod extends Model
 
     public function purchases()
     {
-        return $this->hasMany(Purchase::class, 'delivery_method_id');
+        return $this->hasMany(PurchaseBySeller::class, 'delivery_method_id');
     }
 }

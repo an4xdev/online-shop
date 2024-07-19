@@ -22,4 +22,9 @@ class Purchase extends Model
     {
         return $this->hasMany(PurchaseBySeller::class, 'purchase_id');
     }
+
+    public function products()
+    {
+        return $this->hasManyThrough(Product::class, PurchaseProduct::class, 'purchase_by_seller_id', 'id', 'id', 'product_id');
+    }
 }

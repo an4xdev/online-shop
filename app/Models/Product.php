@@ -25,7 +25,7 @@ class Product extends Model
 
     public function purchases()
     {
-        return $this->belongsToMany(Purchase::class, 'purchase_products', 'product_id', 'purchase_id')
+        return $this->belongsToMany(PurchaseProduct::class, 'purchase_products')
             ->withPivot('counter');
     }
 }
