@@ -19,10 +19,12 @@ class ShoppingCartController extends Controller
             foreach ($cart as $item) {
                 $product = $item['product'];
                 $quantity = $item['quantity'];
+                $seller_id = $item['seller_id'];
 
                 $productsInCart[] = [
                     'product' => $product,
                     'quantity' => $quantity,
+                    'seller_id' => $seller_id,
                 ];
 
                 $totalPrice += $product->price * $quantity;
@@ -41,6 +43,12 @@ class ShoppingCartController extends Controller
         $productsInCart = $result['productsInCart'];
         $totalPrice = $result['totalPrice'];
 
+        // $collection = collect($productsInCart);
+
+        // $grouped = $collection->groupBy('seller_id');
+
+        // dd($grouped);
+
         return view('cart.index', compact('productsInCart', 'totalPrice'));
     }
 
@@ -50,6 +58,7 @@ class ShoppingCartController extends Controller
         //
         $productId = $request->input('product_id');
         $quantity = $request->input('quantity');
+        $seller_id = $request->input('seller_id');
 
         $product = Product::where('id', $productId)->first();
 
@@ -76,6 +85,7 @@ class ShoppingCartController extends Controller
         $newProduct = [
             'product' => $product,
             'quantity' => $quantity,
+            'seller_id' => $seller_id
         ];
 
         $cart[] = $newProduct;

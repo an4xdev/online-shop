@@ -21,6 +21,7 @@
                         <form action="{{route('cart.store')}}" method="post">
                             @csrf
                             <input type="hidden" name="product_id" value="{{$product->id}}">
+                            <input type="hidden" name="seller_id" value="{{$product->seller_id}}">
                             <input type="hidden" name="quantity" value="1">
                             <x-bladewind::button can_submit="true" icon='shopping-cart' icon_right="true">Dodaj do koszyka</x-bladewind::button>
                         </form>

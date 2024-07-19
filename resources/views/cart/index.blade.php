@@ -5,6 +5,13 @@
                 <div class="flex justify-between">
                     <div><span class="font-semibold">Kwota zakupu: </span> {{$totalPrice}}zł</div>
                     <div>
+                        <form action="{{route('cart.clear')}}" method='POST'>
+                            @csrf
+                            @method('DELETE')
+                            <x-bladewind::button can_submit='true' icon='trash' icon_right="true" color="red">Wyczyść koszyk</x-bladewind::button>
+                        </form>
+                    </div>
+                    <div>
                         <x-bladewind::button tag='a' href="{{route('purchase.create')}}" icon='wallet' icon_right="true" color="green">Przejdź do dostawy i płatności</x-bladewind::button>
                     </div>
                 </div>
