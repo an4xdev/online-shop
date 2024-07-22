@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DeliveryMethod;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Session;
 
 class ShoppingCartController extends Controller
 {
-
     private function itemsInCart()
     {
         $productsInCart = [];
@@ -21,11 +20,13 @@ class ShoppingCartController extends Controller
                 $product = $item['product'];
                 $quantity = $item['quantity'];
                 $seller_id = $item['seller_id'];
+                $delivery = $item['delivery'];
 
                 $productsInCart[] = [
                     'product' => $product,
                     'quantity' => $quantity,
                     'seller_id' => $seller_id,
+                    'delivery' => $delivery
                 ];
 
                 $totalPrice += $product->price * $quantity;
@@ -47,7 +48,7 @@ class ShoppingCartController extends Controller
         $productsInCart = $result['productsInCart'];
         $totalPrice = $result['totalPrice'];
 
-        dd($productsInCart);
+        // dd($productsInCart);
 
         return view('cart.index', compact('productsInCart', 'totalPrice'));
     }
@@ -57,10 +58,9 @@ class ShoppingCartController extends Controller
     {
         //
         $productId = $request->input('product_id');
-        $quantity = $request->input('quantity');
         $seller_id = $request->input('seller_id');
 
-        $product = Product::where('id', $productId)->first();
+        $product = Product::where('id', '=', $productId)->first();
 
         if (!Session::has('cart')) {
             Session::put('cart', []);
@@ -84,8 +84,9 @@ class ShoppingCartController extends Controller
 
         $newProduct = [
             'product' => $product,
-            'quantity' => $quantity,
-            'seller_id' => $seller_id
+            'quantity' => 1,
+            'seller_id' => $seller_id,
+            'delivery' => DeliveryMethod::where('id', '=', 1)->first(),
         ];
 
         $cart[] = $newProduct;

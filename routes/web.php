@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/purchases/{user}', [PurchaseController::class, 'showPurchases'])->name('purchase.user');
     Route::get('/orders/{user}', [PurchaseController::class, 'showOrders'])->name('order.user');
+    Route::post('/purchases', [PurchaseController::class, 'store'])->name('purchase.store');
     Route::get('/purchases', [PurchaseController::class, 'create'])->name('purchase.create');
     Route::put('/purchases', [PurchaseController::class, 'changeDeliveryMethod'])->name('purchase.changeDeliveryMethod');
     Route::get('/cart', [ShoppingCartController::class, 'index'])->name('cart.index');

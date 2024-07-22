@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DeliveryMethod;
 use App\Models\User;
+use App\Models\Product;
+use App\Models\Category;
 use App\Models\Purchase;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use App\Models\DeliveryMethod;
+use App\Models\PurchaseProduct;
+use App\Models\PurchaseBySeller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class PurchaseController extends Controller
@@ -15,6 +20,9 @@ class PurchaseController extends Controller
     {
         $productsInCart = [];
         $totalPrice = 0;
+        $delivery_price = 0;
+        $priceWithDelivery = 0;
+        $deliveryArray = [];
         if (Session::has('cart')) {
             $cart = Session::get('cart');
 
@@ -22,27 +30,26 @@ class PurchaseController extends Controller
                 $product = $item['product'];
                 $quantity = $item['quantity'];
                 $seller_id = $item['seller_id'];
+                $delivery = $item['delivery'];
 
                 $productsInCart[] = [
                     'product' => $product,
                     'quantity' => $quantity,
                     'seller_id' => $seller_id,
+                    'delivery' => $delivery
                 ];
 
                 $totalPrice += $product->price * $quantity;
-            }
 
-            if (Session::has('delivery')) {
-                $delivery = Session::get('delivery');
-                $priceWithDelivery = $totalPrice + $delivery['price'];
-            } else {
-                $delivery = [
-                    'id' => 1,
-                    'price' => 0,
-                ];
-                Session::put('delivery', $delivery);
+                if (!array_key_exists($seller_id, $deliveryArray)) {
+                    $deliveryArray[$seller_id] = $delivery->price;
+                }
             }
         }
+
+        $delivery_price = array_sum($deliveryArray);
+
+        $priceWithDelivery = $totalPrice + $delivery_price;
 
         $collection = collect($productsInCart);
         $grouped = $collection->groupBy('seller_id')->sortKeys();
@@ -50,9 +57,9 @@ class PurchaseController extends Controller
         return [
             'productsInCart' => $grouped,
             'totalPrice' => $totalPrice,
-            'priceWithDelivery' => $priceWithDelivery,
             'deliveryTypes' => $deliveryTypes,
-            'delivery' => $delivery
+            'deliveryPrice' => $delivery_price,
+            'priceWithDelivery' => $priceWithDelivery,
         ];
     }
 
@@ -62,45 +69,71 @@ class PurchaseController extends Controller
 
         $productsInCart = $data['productsInCart'];
         $totalPrice = $data['totalPrice'];
+        $deliveryPrice = $data['deliveryPrice'];
         $priceWithDelivery = $data['priceWithDelivery'];
         $deliveryTypes = $data['deliveryTypes'];
-        $delivery = $data['delivery'];
 
-        return view('purchase.create', compact('productsInCart', 'totalPrice', 'priceWithDelivery', 'deliveryTypes', 'delivery'));
+        return view('purchase.create', compact('productsInCart', 'totalPrice', 'deliveryTypes', 'deliveryPrice', 'priceWithDelivery'));
+    }
+
+    public function store()
+    {
+        $data = $this->items();
+        $productsInCart = $data['productsInCart'];
+        $priceWithDelivery = $data['priceWithDelivery'];
+        $purchase = Purchase::create(['date' => date('Y-m-d'), 'user_id' => auth()->id(), 'total_price' => $priceWithDelivery]);
+        foreach ($productsInCart as $sellerId => $products) {
+            $purchaseBySeller = PurchaseBySeller::create(['purchase_id' => $purchase->id, 'seller_id' => $sellerId, 'delivery_status_id' => 1, 'delivery_method_id' => $products[0]['delivery']->id, 'delivered' => false]);
+            foreach ($products as $productInCart) {
+                PurchaseProduct::create(['purchase_by_seller_id' => $purchaseBySeller->id, 'product_id' => $productInCart['product']->id, 'counter' => $productInCart['quantity']]);
+            }
+        }
+        Session::forget('cart');
+        session()->flash('success', ['Zakup został pomyślnie dokonany.']);
+        $categories = Category::with('subCategories')->get();
+        $randomProducts = Product::with('category')->inRandomOrder()->limit(12)->get();
+        return view('welcome', compact('categories', 'randomProducts'));
     }
 
     public function changeDeliveryMethod(Request $request)
     {
         $fields = $request->validate([
-            'deliveryType' => ['required', 'numeric']
+            'deliveryType' => ['required', 'numeric'],
+            'seller_id' => ['required', 'numeric'],
         ]);
-        if (Session::has('delivery')) {
-            $delivery = Session::get('delivery');
 
-            $methods = DeliveryMethod::findOrFail($fields['deliveryType']);
+        $cart = Session::get('cart');
 
-            $delivery = [
-                'id' => $methods->id,
-                'price' => $methods->price,
-            ];
-            Session::put('delivery', $delivery);
+        $found = false;
+
+        $deliveryType = DeliveryMethod::where('id', '=', $fields['deliveryType'])->first();
+
+        foreach ($cart as $key => $item) {
+            if ($item['seller_id'] == $fields['seller_id']) {
+
+                $found = true;
+
+                $cart[$key]['delivery'] = $deliveryType;
+
+                Session::put('cart', $cart);
+            }
+        }
+
+        if (!$found) {
+            session()->flash('error', ["Produkt nie został znaleziony w koszyku."]);
         } else {
-            $delivery = [
-                'id' => 1,
-                'price' => 0,
-            ];
-            Session::put('delivery', $delivery);
+            session()->flash('info', ["Rodzaj dostawy został zmieniony."]);
         }
 
         $data = $this->items();
 
         $productsInCart = $data['productsInCart'];
         $totalPrice = $data['totalPrice'];
+        $deliveryPrice = $data['deliveryPrice'];
         $priceWithDelivery = $data['priceWithDelivery'];
         $deliveryTypes = $data['deliveryTypes'];
-        $delivery = $data['delivery'];
 
-        return view('purchase.create', compact('productsInCart', 'totalPrice', 'priceWithDelivery', 'deliveryTypes', 'delivery'));
+        return view('purchase.create', compact('productsInCart', 'totalPrice', 'deliveryTypes', 'deliveryPrice', 'priceWithDelivery'));
     }
 
     //

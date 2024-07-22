@@ -1,17 +1,12 @@
-- [Online shop project](#online-shop-project)
-  - [Project](#project)
-  - [Used](#used)
-  - [Requirements](#requirements)
-  - [User types](#user-types)
-  - [Custom data seeding](#custom-data-seeding)
-  - [Start project](#start-project)
-    - [Use batch script](#use-batch-script)
-    - [Run separately](#run-separately)
-      - [Run laravel](#run-laravel)
-      - [Install js dependencies](#install-js-dependencies)
-      - [Run node.js](#run-nodejs)
-      - [Run migrations](#run-migrations)
-      - [Seed database](#seed-database)
+
+- [Project](#project)
+- [Used](#used)
+- [Requirements](#requirements)
+- [User types](#user-types)
+- [Custom data seeding](#custom-data-seeding)
+- [Start project](#start-project)
+  - [Use batch script](#use-batch-script)
+  - [Run separately](#run-separately)
 
 # Online shop project
 
@@ -83,6 +78,14 @@ Seed database:
 ## Start project
 
 ### Use batch script
+
+#### With migrations and data seeding
+
+```bash
+> run.bat -mds
+```
+
+#### Without migrations and data seeding
 
 ```bash
 > run.bat
