@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use App\Models\DeliveryMethod;
 use App\Models\PurchaseProduct;
 use App\Models\PurchaseBySeller;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class PurchaseController extends Controller
@@ -76,7 +75,7 @@ class PurchaseController extends Controller
         return view('purchase.create', compact('productsInCart', 'totalPrice', 'deliveryTypes', 'deliveryPrice', 'priceWithDelivery'));
     }
 
-    public function store()
+    public function store(): View
     {
         $data = $this->items();
         $productsInCart = $data['productsInCart'];
@@ -95,7 +94,7 @@ class PurchaseController extends Controller
         return view('welcome', compact('categories', 'randomProducts'));
     }
 
-    public function changeDeliveryMethod(Request $request)
+    public function changeDeliveryMethod(Request $request): View
     {
         $fields = $request->validate([
             'deliveryType' => ['required', 'numeric'],
@@ -136,8 +135,21 @@ class PurchaseController extends Controller
         return view('purchase.create', compact('productsInCart', 'totalPrice', 'deliveryTypes', 'deliveryPrice', 'priceWithDelivery'));
     }
 
+    public function index(User $user)
+    {
+        $role_id = $user->role->id;
+        if ($role_id == 1) {
+            // TODO: admin view
+            return $this->showUserPurchases($user);
+        } else if ($role_id == 2) {
+            return $this->showSellerPurchases($user);
+        } else if ($role_id == 3) {
+            return $this->showUserPurchases($user);
+        }
+    }
+
     //
-    public function showPurchases(User $user): View
+    private function showUserPurchases(User $user): View
     {
         if ($user->id != auth()->id()) {
             abort(403, "Próbujesz zobaczyć zakupy, innego użytkownika.");
@@ -158,6 +170,23 @@ class PurchaseController extends Controller
         // dd($purchases);
 
         return view('user.purchases', compact("purchases"));
+    }
+
+
+    private function showSellerPurchases(User $user): View
+    {
+        if ($user->id != auth()->id()) {
+            abort(403, "Próbujesz zobaczyć zakupy, innego użytkownika.");
+        }
+
+        $purchasesBySeller = PurchaseBySeller::with([
+            'purchase',
+            'products.product',
+        ])->where('seller_id', $user->id)->get();
+
+        // dd($purchasesBySeller);
+
+        return view('seller.purchases', compact('purchasesBySeller'));
     }
 
     public function showOrders(User $user): View
