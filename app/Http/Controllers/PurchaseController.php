@@ -182,7 +182,9 @@ class PurchaseController extends Controller
         $purchasesBySeller = PurchaseBySeller::with([
             'purchase',
             'products.product',
-        ])->where('seller_id', $user->id)->get();
+            'delivery_method',
+            'delivery_status',
+        ])->where('seller_id', $user->id)->where('delivered', '=', false)->get();
 
         // dd($purchasesBySeller);
 
