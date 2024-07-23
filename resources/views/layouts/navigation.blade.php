@@ -44,13 +44,14 @@
                             {{ __('Mój profil') }}
                         </x-dropdown-link>
 
-                        <x-dropdown-link :href="route('cart.index')">
+                        @if(session('user_role') == 'user')
+                             <x-dropdown-link :href="route('cart.index')">
                             {{ __('Mój koszyk') }}
-                        </x-dropdown-link>
-
-                        <x-dropdown-link :href="route('order.user',  Auth::user())">
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('order.user',  Auth::user())">
                                     {{ __('Moje zamówienia') }}
-                        </x-dropdown-link>
+                            </x-dropdown-link>
+                        @endif
 
                         <x-dropdown-link :href="route('purchase.user',  Auth::user())">
                                     {{ __('Moje zakupy') }}
@@ -112,17 +113,19 @@
             </div>
 
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Mój profil') }}
-                </x-responsive-nav-link>
+                <x-dropdown-link :href="route('profile.edit')">
+                            {{ __('Mój profil') }}
+                </x-dropdown-link>
 
-                <x-dropdown-link :href="route('cart.index')">
+                @if(session('user_role') == 'user')
+                        <x-dropdown-link :href="route('cart.index')">
                     {{ __('Mój koszyk') }}
-                </x-dropdown-link>
-
-                <x-dropdown-link :href="route('order.user',  Auth::user())">
+                    </x-dropdown-link>
+                    
+                    <x-dropdown-link :href="route('order.user',  Auth::user())">
                             {{ __('Moje zamówienia') }}
-                </x-dropdown-link>
+                    </x-dropdown-link>
+                @endif
 
                 <x-dropdown-link :href="route('purchase.user',  Auth::user())">
                             {{ __('Moje zakupy') }}
