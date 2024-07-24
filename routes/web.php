@@ -25,6 +25,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/purchases', [PurchaseController::class, 'store'])->name('purchase.store');
     Route::get('/purchases', [PurchaseController::class, 'create'])->name('purchase.create');
     Route::put('/purchases', [PurchaseController::class, 'changeDeliveryMethod'])->name('purchase.changeDeliveryMethod');
+    Route::put('/purchases/status', [PurchaseController::class, 'editDeliveryStatus'])->name('purchase.changeStatus');
+    Route::put('/purchases/complete', [PurchaseController::class, 'completePurchase'])->name('purchase.complete');
     Route::get('/cart', [ShoppingCartController::class, 'index'])->name('cart.index');
     Route::post('/cart', [ShoppingCartController::class, 'store'])->name('cart.store');
     Route::put('/cart', [ShoppingCartController::class, 'updateCart'])->name('cart.update');

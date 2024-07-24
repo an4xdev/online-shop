@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DeliveryStatus;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Category;
@@ -172,8 +173,25 @@ class PurchaseController extends Controller
         return view('user.purchases', compact("purchases"));
     }
 
-
     private function showSellerPurchases(User $user): View
+    {
+        if ($user->id != auth()->id()) {
+            abort(403, "Próbujesz zobaczyć zakupy, innego użytkownika.");
+        }
+
+        $purchasesBySeller = PurchaseBySeller::with([
+            'purchase',
+            'products.product',
+            'delivery_method',
+        ])->where('seller_id', $user->id)->where('delivered', '=', true)->get();
+
+        // dd($purchasesBySeller);
+
+        return view('seller.purchases', compact('purchasesBySeller'));
+    }
+
+
+    private function showSellerOrders(User $user): View
     {
         if ($user->id != auth()->id()) {
             abort(403, "Próbujesz zobaczyć zakupy, innego użytkownika.");
@@ -188,15 +206,69 @@ class PurchaseController extends Controller
 
         // dd($purchasesBySeller);
 
-        return view('seller.purchases', compact('purchasesBySeller'));
+        $delivery_statuses = DeliveryStatus::where('id', '>', 1)->where('id', '<', 4)->get();
+
+        // dd($delivery_statuses);
+
+        return view('seller.orders', compact('purchasesBySeller', 'delivery_statuses'));
     }
 
-    public function showOrders(User $user): View
+    public function editDeliveryStatus(Request $request)
+    {
+        $user = User::find(auth()->id());
+
+        $fields = $request->validate(
+            [
+                'purchase_by_seller_id' => ['required', 'numeric'],
+                'delivery_status_id' => ['required', 'numeric'],
+            ]
+        );
+
+        $purchaseBySeller = PurchaseBySeller::where('id', $fields['purchase_by_seller_id'])->first();
+
+        $purchaseBySeller->delivery_status_id = $fields['delivery_status_id'];
+
+        $purchaseBySeller->save();
+
+        return $this->index($user);
+    }
+
+    public function completePurchase(Request $request)
+    {
+        $user = User::find(auth()->id());
+
+        $fields = $request->validate(
+            ['purchase_by_seller_id' => ['required', 'numeric']]
+        );
+
+        $purchaseBySeller = PurchaseBySeller::where('id', $fields['purchase_by_seller_id'])->first();
+
+        $purchaseBySeller->delivery_status_id = 4;
+        $purchaseBySeller->delivered = true;
+
+        $purchaseBySeller->save();
+
+        return $this->showOrdersUser($user);
+    }
+
+    public function showOrders(User $user)
+    {
+        $role_id = $user->role->id;
+        if ($role_id == 1) {
+            // TODO: admin view
+            return $this->showUserPurchases($user);
+        } else if ($role_id == 2) {
+            return $this->showSellerOrders($user);
+        } else if ($role_id == 3) {
+            return $this->showOrdersUser($user);
+        }
+    }
+
+    private function showOrdersUser(User $user): View
     {
         if ($user->id != auth()->id()) {
             abort(403, "Próbujesz zobaczyć zamówienie innego użytkownika.");
         }
-
 
         $orders = Purchase::where('user_id', $user->id)
             ->whereHas('bySellers', function ($query) {

@@ -44,14 +44,15 @@
                             {{ __('Mój profil') }}
                         </x-dropdown-link>
 
-                        @if(session('user_role') == 'user')
+                        @if(session('role') == 'user')
                              <x-dropdown-link :href="route('cart.index')">
                             {{ __('Mój koszyk') }}
                             </x-dropdown-link>
-                            <x-dropdown-link :href="route('order.user',  Auth::user())">
+                        @endif
+
+                        <x-dropdown-link :href="route('order.user',  Auth::user())">
                                     {{ __('Moje zamówienia') }}
                             </x-dropdown-link>
-                        @endif
 
                         <x-dropdown-link :href="route('purchase.user',  Auth::user())">
                                     {{ __('Moje zakupy') }}
@@ -121,7 +122,7 @@
                         <x-dropdown-link :href="route('cart.index')">
                     {{ __('Mój koszyk') }}
                     </x-dropdown-link>
-                    
+
                     <x-dropdown-link :href="route('order.user',  Auth::user())">
                             {{ __('Moje zamówienia') }}
                     </x-dropdown-link>
