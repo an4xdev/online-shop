@@ -22,7 +22,22 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+        $categoriesData = $categories->map(function ($category) {
+            return [
+                'label' => $category->name,
+                'value' => $category->id,
+            ];
+        });
+        $subCategories = SubCategory::all();
+        $subCategoriesData = $subCategories->map(function ($subCategory) {
+            return [
+                'label' => $subCategory->name,
+                'value' => $subCategory->id,
+                'category_id' => $subCategory->category_id,
+            ];
+        });
+        return view('product.create', compact('categoriesData', 'subCategoriesData'));
     }
 
     /**
@@ -31,6 +46,19 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         //
+        $fields = $request->validate(
+            [
+                'name' => ['required', 'string'],
+                'description' => ['required', 'string'],
+                'price' => ['required', 'numeric'],
+                'image' => ['required', 'image'],
+                'counter' => ['required', 'numeric'],
+                'sub_category_id' => ['required', 'numeric'],
+            ]
+        );
+
+        $image_path = $fields['image']->store('uploads', 'public');
+        dd($image_path);
     }
 
     /**

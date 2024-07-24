@@ -1,4 +1,5 @@
 <x-app-layout>
+    <a href="{{route('product.create')}}">TEST</a>
     <div class='lg:flex pt-4'>
         {{-- categories --}}
         <x-bladewind::centered-content size="tiny">
