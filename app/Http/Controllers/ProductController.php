@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\SubCategory;
@@ -12,9 +13,27 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(User $user)
     {
         //
+        $role_id = $user->role->id;
+        if ($role_id == 1) {
+            // TODO: admin view
+            return $this->showSellerProducts($user);
+        } else if ($role_id == 2) {
+            return $this->showSellerProducts($user);
+        } else if ($role_id == 3) {
+            return abort(403, "Użytkownicy nie mogą zobaczyć wszystkich produktów sprzedawcy.");
+        }
+    }
+
+    private function showSellerProducts(User $user)
+    {
+        if ($user->id != auth()->id()) {
+            return abort(403, "Próbujesz zobaczyć produkty innego sprzedawcy.");
+        }
+        $products = Product::where("seller_id", "=", $user->id)->paginate(12);
+        return view('product.index', compact('products'));
     }
 
     /**
@@ -59,6 +78,18 @@ class ProductController extends Controller
 
         $image_path = $fields['image']->store('uploads', 'public');
         dd($image_path);
+
+        Product::create(
+            [
+                'name' => $fields['name'],
+                'description' => $fields['description'],
+                'price' => $fields['price'],
+                'image_path' => $image_path,
+                'counter' => $fields['counter'],
+                'sub_category_id' => $fields['sub_category_id'],
+                'seller_id' => auth()->id(),
+            ]
+        );
     }
 
     /**

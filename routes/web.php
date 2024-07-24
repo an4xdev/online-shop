@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/cart/clear', [ShoppingCartController::class, 'clearCart'])->name('cart.clear');
     Route::get('/products/create', [ProductController::class, 'create'])->name('product.create');
     Route::post('/products', [ProductController::class, 'store'])->name('product.store');
+    Route::get('/products/{user}', [ProductController::class, 'index'])->name('product.index');
     // Route::resource('product', ProductController::class);
 });
 

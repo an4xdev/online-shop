@@ -44,6 +44,12 @@
                             {{ __('Mój profil') }}
                         </x-dropdown-link>
 
+                         @if(session('role') == 'seller')
+                             <x-dropdown-link :href="route('product.index', Auth::user())">
+                            {{ __('Moje produkty') }}
+                            </x-dropdown-link>
+                        @endif
+
                         @if(session('role') == 'user')
                              <x-dropdown-link :href="route('cart.index')">
                             {{ __('Mój koszyk') }}
