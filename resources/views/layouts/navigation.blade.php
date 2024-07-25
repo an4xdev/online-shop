@@ -56,13 +56,21 @@
                             </x-dropdown-link>
                         @endif
 
-                        <x-dropdown-link :href="route('order.user',  Auth::user())">
+                        @if (session('role') != "admin")
+                             <x-dropdown-link :href="route('order.user',  Auth::user())">
                                     {{ __('Moje zamówienia') }}
                             </x-dropdown-link>
 
-                        <x-dropdown-link :href="route('purchase.user',  Auth::user())">
-                                    {{ __('Moje zakupy') }}
-                        </x-dropdown-link>
+                            <x-dropdown-link :href="route('purchase.user',  Auth::user())">
+                                        {{ __('Moje zakupy') }}
+                            </x-dropdown-link>
+                        @endif
+
+                        @if (session('role') == "admin")
+                            <x-dropdown-link :href="route('category.index')">
+                                    {{ __('Kategorie') }}
+                            </x-dropdown-link>
+                        @endif
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
@@ -121,22 +129,36 @@
 
             <div class="mt-3 space-y-1">
                 <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Mój profil') }}
+                    {{ __('Mój profil') }}
                 </x-dropdown-link>
 
-                @if(session('user_role') == 'user')
-                        <x-dropdown-link :href="route('cart.index')">
-                    {{ __('Mój koszyk') }}
-                    </x-dropdown-link>
-
-                    <x-dropdown-link :href="route('order.user',  Auth::user())">
-                            {{ __('Moje zamówienia') }}
+                @if(session('role') == 'seller')
+                    <x-dropdown-link :href="route('product.index', Auth::user())">
+                    {{ __('Moje produkty') }}
                     </x-dropdown-link>
                 @endif
 
-                <x-dropdown-link :href="route('purchase.user',  Auth::user())">
-                            {{ __('Moje zakupy') }}
-                </x-dropdown-link>
+                @if(session('role') == 'user')
+                    <x-dropdown-link :href="route('cart.index')">
+                    {{ __('Mój koszyk') }}
+                    </x-dropdown-link>
+                @endif
+
+                @if (session('role') != "admin")
+                    <x-dropdown-link :href="route('order.user',  Auth::user())">
+                            {{ __('Moje zamówienia') }}
+                    </x-dropdown-link>
+
+                    <x-dropdown-link :href="route('purchase.user',  Auth::user())">
+                                {{ __('Moje zakupy') }}
+                    </x-dropdown-link>
+                @endif
+
+                @if (session('role') == "admin")
+                    <x-dropdown-link :href="route('category.index')">
+                            {{ __('Kategorie') }}
+                    </x-dropdown-link>
+                @endif
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">

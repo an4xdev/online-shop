@@ -19,8 +19,7 @@ class ProductController extends Controller
         //
         $role_id = $user->role->id;
         if ($role_id == 1) {
-            // TODO: admin view
-            return $this->showSellerProducts($user);
+            return $this->showAdminProducts();
         } else if ($role_id == 2) {
             return $this->showSellerProducts($user);
         } else if ($role_id == 3) {
@@ -28,12 +27,18 @@ class ProductController extends Controller
         }
     }
 
+    private function showAdminProducts()
+    {
+        $products = Product::paginate(10);
+        return view("product.index", compact("products"));
+    }
+
     private function showSellerProducts(User $user)
     {
         if ($user->id != auth()->id()) {
             return abort(403, "Próbujesz zobaczyć produkty innego sprzedawcy.");
         }
-        $products = Product::where("seller_id", "=", $user->id)->paginate(12);
+        $products = Product::where("seller_id", "=", $user->id)->paginate(10);
         return view('product.index', compact('products'));
     }
 
