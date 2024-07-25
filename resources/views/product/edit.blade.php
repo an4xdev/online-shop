@@ -16,6 +16,7 @@
             <label for="counter">Ilość</label>
             <x-bladewind::input numeric="true" name="counter" min="0" required="true" error_message="Ilość dostępnych produktów jest wymagana oraz większa niż 0" placeholder="1" id="counter" show_error_inline="true" value="{{$product->price}}"/>
             {{-- sub_category_id --}}
+            {{-- TODO: make value selected --}}
             <div class='flex'>
                 <div class='flex-1'>
                     <x-bladewind::select name="category_id" placeholder="Kategoria produktu" :data="$categoriesData" filter="sub_category_id" searchable="true"/>

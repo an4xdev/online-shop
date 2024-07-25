@@ -11,8 +11,8 @@ class CategoryController extends Controller
 
     private function check(string $comm)
     {
-        $role_id = User::where('id', '=', auth()->id())->get();
-        if ($role_id != 1) {
+        $user = User::where('id', '=', auth()->id())->firstOrFail();
+        if ($user->role_id != 1) {
             return abort(403, $comm);
         }
     }
