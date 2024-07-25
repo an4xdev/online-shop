@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -77,7 +78,7 @@ class ProductController extends Controller
         );
 
         $image_path = $fields['image']->store('uploads', 'public');
-        dd($image_path);
+        // dd($image_path);
 
         Product::create(
             [
@@ -106,6 +107,32 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         //
+        $user = User::where("id", auth()->id())->first();
+        $role_id = $user->role->id;
+        if ($role_id == 2) {
+            if ($product->seller_id != $user->id) {
+                return abort(403, "Nie możesz edytować produktu innego sprzedawcy.");
+            }
+        } else if ($role_id == 3) {
+            return abort(403, "Użytkownicy nie mogą edytować produktów.");
+        }
+
+        $categories = Category::all();
+        $categoriesData = $categories->map(function ($category) {
+            return [
+                'label' => $category->name,
+                'value' => $category->id,
+            ];
+        });
+        $subCategories = SubCategory::all();
+        $subCategoriesData = $subCategories->map(function ($subCategory) {
+            return [
+                'label' => $subCategory->name,
+                'value' => $subCategory->id,
+                'category_id' => $subCategory->category_id,
+            ];
+        });
+        return view('product.edit', compact('product', 'categoriesData', 'subCategoriesData'));
     }
 
     /**
@@ -114,6 +141,32 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         //
+        $user = User::where("id", auth()->id())->first();
+        $role_id = $user->role->id;
+        if ($role_id == 2) {
+            if ($product->seller_id != $user->id) {
+                return abort(403, "Nie możesz edytować produktu innego sprzedawcy.");
+            }
+        } else if ($role_id == 3) {
+            return abort(403, "Użytkownicy nie mogą edytować produktów.");
+        }
+
+        $fields = $request->validate(
+            [
+                'name' => ['required', 'string'],
+                'description' => ['required', 'string'],
+                'price' => ['required', 'numeric'],
+                'image' => ['required', 'image'],
+                'counter' => ['required', 'numeric'],
+                'sub_category_id' => ['required', 'numeric'],
+            ]
+        );
+        Storage::disk('public')->delete($product->image_path);
+        $image_path = $fields['image']->store('uploads', 'public');
+        $product->image_path = $image_path;
+        $product->update($fields);
+
+        return back();
     }
 
     /**
@@ -122,6 +175,33 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //
+        $user = User::where("id", auth()->id())->first();
+        $role_id = $user->role->id;
+        if ($role_id == 1) {
+            return $this->destroyAdmin($product, $user);
+        } else if ($role_id == 2) {
+            return $this->destroySeller($product, $user);
+        } else if ($role_id == 3) {
+            return abort(403, "Użytkownicy nie mogą usuwać produktów.");
+        }
+    }
+
+    private function destroyAdmin(Product $product, User $user)
+    {
+        $product->delete();
+
+        return back();
+    }
+
+    private function destroySeller(Product $product, User $user)
+    {
+        if ($product->seller_id != $user->id) {
+            return abort(403, "Próbujesz usunąć produkt innego sprzedawcy");
+        }
+
+        $product->delete();
+
+        return $this->showSellerProducts($user);
     }
 
     public function show_by_category(SubCategory $sub_category)
