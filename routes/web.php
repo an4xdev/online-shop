@@ -53,6 +53,11 @@ Route::middleware('auth')->group(function () {
     // -------------------------- CATEGORY -------------------------------------------
 
     Route::get('/categories', [CategoryController::class, 'index'])->name('category.index');
+    Route::get('/categories/create', [CategoryController::class, 'create'])->name('category.create');
+    Route::post('/categories', [CategoryController::class, 'store'])->name('category.store');
+    Route::get('/categories/edit/{category}', [CategoryController::class, 'edit'])->name('category.edit');
+    Route::put('/categories', [CategoryController::class, 'update'])->name('category.update');
+    Route::delete('/categories', [CategoryController::class, 'delete'])->name('category.delete');
 });
 
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('product.show');
