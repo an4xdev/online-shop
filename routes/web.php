@@ -8,6 +8,7 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\ShoppingCartController;
 
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
@@ -23,7 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // -------------------------- PURCHASE -------------------------------------------
+    // -------------------------- PURCHASE ------------------------------------------
 
     Route::get('/purchases/{user}', [PurchaseController::class, 'index'])->name('purchase.user');
     Route::get('/orders/{user}', [PurchaseController::class, 'showOrders'])->name('order.user');
@@ -33,7 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/purchases/status', [PurchaseController::class, 'editDeliveryStatus'])->name('purchase.changeStatus');
     Route::put('/purchases/complete', [PurchaseController::class, 'completePurchase'])->name('purchase.complete');
 
-    // -------------------------- SHOPPING CART -------------------------------------------
+    // -------------------------- SHOPPING CART --------------------------------------
 
     Route::get('/cart', [ShoppingCartController::class, 'index'])->name('cart.index');
     Route::post('/cart', [ShoppingCartController::class, 'store'])->name('cart.store');
@@ -41,7 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/cart', [ShoppingCartController::class, 'removeFromCart'])->name('cart.delete');
     Route::delete('/cart/clear', [ShoppingCartController::class, 'clearCart'])->name('cart.clear');
 
-    // -------------------------- PRODUCT -------------------------------------------
+    // -------------------------- PRODUCT --------------------------------------------
 
     Route::get('/products/create', [ProductController::class, 'create'])->name('product.create');
     Route::post('/products', [ProductController::class, 'store'])->name('product.store');
@@ -56,8 +57,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('category.create');
     Route::post('/categories', [CategoryController::class, 'store'])->name('category.store');
     Route::get('/categories/edit/{category}', [CategoryController::class, 'edit'])->name('category.edit');
-    Route::put('/categories', [CategoryController::class, 'update'])->name('category.update');
-    Route::delete('/categories', [CategoryController::class, 'delete'])->name('category.delete');
+    Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('category.update');
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('category.destroy');
+
+    // -------------------------- SUBCATEGORY ----------------------------------------
+
+    Route::get('/subcategories/create/{id?}', [SubCategoryController::class, 'create'])->name('subcategory.create');
+    Route::get('/subcategories/edit/{subcategory}', [SubCategoryController::class, 'edit'])->name('subcategory.edit');
+    Route::post('/subcategories', [SubCategoryController::class, 'store'])->name('subcategory.store');
+    Route::put('/subcategories/{subcategory}', [SubCategoryController::class, 'update'])->name('subcategory.update');
+    Route::delete('/subcategories/{subcategory}', [SubCategoryController::class, 'destroy'])->name('subcategory.destroy');
 });
 
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('product.show');

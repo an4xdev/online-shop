@@ -1,9 +1,12 @@
 <x-app-layout>
     <x-bladewind::centered-content size="xl">
-        <form action="{{route('category.store')}}" method="post" id="editForm">
+        <form action="{{route('subcategory.update', $subcategory)}}" method="post" id="editForm">
             @csrf
-            <x-bladewind::input name="name" placeholder="Nazwa kategorii" required="true"
-            show_error_inline="true" error_message="Nazwa kategorii jest wymagana"/>
+            @method('PUT')
+            {{-- TODO: make value of category id selected --}}
+            <x-bladewind::select name="category_id" placeholder="Kategoria produktu" :data="$categoryData" searchable="true"/>
+            <x-bladewind::input name="name" placeholder="Nazwa podkategorii" required="true"
+            show_error_inline="true" error_message="Nazwa podkategorii jest wymagana" selected_value="{{$subcategory->name}}"/>
             <x-bladewind::button can_submit="true" icon='plus-circle' icon_right="true" color="green" size="medium">Dodaj</x-bladewind::button>
         </form>
     </x-bladewind::centered-content>

@@ -40,7 +40,7 @@
         submitForm = () => {
             if(validateForm('#editForm'))
             {
-                document.getElementById('editForm').submit();
+                dom_el('#editForm').submit();
             }
         }
     </script>
