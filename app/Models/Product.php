@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\User;
+use App\Models\Opinion;
 use App\Models\Purchase;
 use App\Models\SubCategory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,5 +28,10 @@ class Product extends Model
     {
         return $this->belongsToMany(PurchaseProduct::class, 'purchase_products')
             ->withPivot('counter');
+    }
+
+    public function opinions()
+    {
+        return $this->hasMany(Opinion::class, 'product_id');
     }
 }

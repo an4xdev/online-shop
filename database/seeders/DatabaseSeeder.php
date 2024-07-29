@@ -43,50 +43,74 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::factory()->create([
-            'name' => 'seller1',
-            'email' => 'seller1@example.com',
+            'name' => 's1',
+            'email' => 's1@example.com',
             'role_id' => 2,
         ]);
 
         User::factory()->create([
-            'name' => 'seller2',
-            'email' => 'seller2@example.com',
+            'name' => 's2',
+            'email' => 's2@example.com',
             'role_id' => 2,
         ]);
 
         User::factory()->create([
-            'name' => 'seller3',
-            'email' => 'seller3@example.com',
+            'name' => 's3',
+            'email' => 's3@example.com',
             'role_id' => 2,
         ]);
 
         User::factory()->create([
-            'name' => 'seller4',
-            'email' => 'seller4@example.com',
+            'name' => 's4',
+            'email' => 's4@example.com',
             'role_id' => 2,
         ]);
 
         User::factory()->create([
-            'name' => 'user1',
-            'email' => 'user1@example.com',
+            'name' => 's5',
+            'email' => 's5@example.com',
+            'role_id' => 2,
+        ]);
+
+        User::factory()->create([
+            'name' => 's6',
+            'email' => 's6@example.com',
+            'role_id' => 2,
+        ]);
+
+        User::factory()->create([
+            'name' => 'u1',
+            'email' => 'u1@example.com',
             'role_id' => 3,
         ]);
 
         User::factory()->create([
-            'name' => 'user2',
-            'email' => 'user2@example.com',
+            'name' => 'u2',
+            'email' => 'u2@example.com',
             'role_id' => 3,
         ]);
 
         User::factory()->create([
-            'name' => 'user3',
-            'email' => 'user3@example.com',
+            'name' => 'u3',
+            'email' => 'u3@example.com',
             'role_id' => 3,
         ]);
 
         User::factory()->create([
-            'name' => 'user4',
-            'email' => 'user4@example.com',
+            'name' => 'u4',
+            'email' => 'u4@example.com',
+            'role_id' => 3,
+        ]);
+
+        User::factory()->create([
+            'name' => 'u5',
+            'email' => 'u5@example.com',
+            'role_id' => 3,
+        ]);
+
+        User::factory()->create([
+            'name' => 'u6',
+            'email' => 'u6@example.com',
             'role_id' => 3,
         ]);
 

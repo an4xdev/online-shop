@@ -43,5 +43,27 @@
                 </p>
             </div>
         </x-bladewind::card>
+        <x-bladewind::card class="hover:shadow-gray-300 mt-4">
+            <div class='mb-4'>
+                <h2 class='font-bold text-2xl'>Opinie</h2>
+            </div>
+            <div>
+               @foreach ($product->opinions as $opinion)
+                   <x-bladewind::card class="hover:shadow-gray-300 mt-4" title="Wystawił: {{$opinion->user->email}}">
+                        <p class='p-2'>
+                            <span class="font-semibold">Opis: </span>
+                            @if ($opinion->description == null)
+                                Brak opisu.
+                            @else
+                                {{$opinion->description}}
+                            @endif
+                        </p>
+                        <div class="mt-5">
+                        <x-bladewind::rating rating="{{$opinion->stars}}" color="yellow" clickable="false" />
+                        </div>
+                   </x-bladewind::card>
+               @endforeach
+            </div>
+        </x-bladewind::card>
     </x-bladewind::centered-content>
 </x-app-layout>

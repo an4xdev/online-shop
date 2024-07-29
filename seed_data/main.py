@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Literal, LiteralString, Tuple
 from data import products
 from data import lorem
 import random
@@ -8,13 +8,13 @@ PROBALITY_MIN: int = 1
 PROBALITY_MAX: int = 10
 PROBALITY: int = 7
 SELLER_ID_START: int = 2
-SELLER_ID_END: int = 5
-USER_ID_START: int = 6
-USER_ID_END: int = 9
-PURCHASE_PER_USER: int = 5
+SELLER_ID_END: int = 7
+USER_ID_START: int = 8
+USER_ID_END: int = 13
+PURCHASE_PER_USER: int = 4
 PURCHASE_BY_SELLER: int = 2
 PURCHASE_MIN_ITEMS: int = 1
-PURCHASE_MAX_ITEMS: int = 5
+PURCHASE_MAX_ITEMS: int = 3
 PURCHASE_ITEM_COUNTER_MIN: int = 1
 PURCHASE_ITEM_COUNTER_MAX: int = 3
 PICTURE: str = "https://picsum.photos/200"
@@ -31,6 +31,14 @@ DELIVERY_STATUS_ID_START: int = 1
 DELIVERY_STATUS_ID_END: int = 4
 DELIVERY_METHOD_ID_START: int = 1
 DELIVERY_METHOD_ID_END: int = 3
+OPINIONS_BY_PRODUCT: int = 2
+STARS_MIN: int = 1
+STARS_MAX: int = 5
+OPINION_NULL_PROBALITY_MIN: int = 1
+OPINION_NULL_PROBALITY_MAX: int = 10
+OPINION_NULL_PROBALITY: int = 3
+WORDS_IN_OPINION_DESCRIPTION_MIN: int = 5
+WORDS_IN_OPINION_DESCRIPTION_MAX: int = 50
 
 if __name__ == "__main__":
 
@@ -43,7 +51,15 @@ if __name__ == "__main__":
     assert DAYS_BACK_MIN < DAYS_BACK_MAX, "Max day back must be greater than min day back"
     assert DELIVERY_STATUS_ID_START < DELIVERY_STATUS_ID_END, "Delivery status id end must be greater than delivery status id start"
     assert DELIVERY_METHOD_ID_START < DELIVERY_METHOD_ID_END, "Delivery method id end must be greater than delivery method id start"
-
+    assert STARS_MIN < STARS_MAX, "Stars for product opinion max must be grather than start for product opinion min"
+    assert STARS_MIN >= 1, "In implemenatation min stars is 1, see Opinions model"
+    assert STARS_MAX <= 5, "In implemenatation msx stars is 5, see Opinions model"
+    assert OPINION_NULL_PROBALITY_MAX > OPINION_NULL_PROBALITY_MIN, "Max probality of null description for opinion of product must be greater than min probality of null description for opinion of product"
+    assert OPINION_NULL_PROBALITY_MAX > OPINION_NULL_PROBALITY and OPINION_NULL_PROBALITY > OPINION_NULL_PROBALITY_MIN, "Probality of null description for opinion of product must be between max and min"
+    assert WORDS_IN_OPINION_DESCRIPTION_MAX > WORDS_IN_OPINION_DESCRIPTION_MIN, "words in opinion description max must be greater than words in opinion description min"
+    lorem_splited: List[LiteralString] = lorem.split(" ")
+    assert len(
+        lorem_splited) > WORDS_IN_OPINION_DESCRIPTION_MAX, "words in opinion description must be less than len of lorem splitted by \" \""
     current_datetime: datetime = datetime.now()
 
     formatted_datetime: str = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
@@ -79,6 +95,25 @@ if __name__ == "__main__":
                                     company} {count} {item_data[1]}"
                                 sql += f"INSERT INTO products('id','name', 'description','price', 'image_path', 'counter', 'sub_category_id', 'seller_id', 'created_at', 'updated_at') VALUES ({product_id},'{
                                     product_name}', '{lorem}', {price}, '{PICTURE}', {counter}, {sub_cat_id}, {seller_id}, '{formatted_datetime}', '{formatted_datetime}');\n"
+
+                                for _ in range(OPINIONS_BY_PRODUCT):
+                                    user_id = random.randint(
+                                        USER_ID_START, USER_ID_END)
+                                    description: LiteralString | None = None
+                                    if random.randint(OPINION_NULL_PROBALITY_MIN, OPINION_NULL_PROBALITY_MAX) > OPINION_NULL_PROBALITY:
+                                        description = ' '.join(random.sample(lorem_splited, k=random.randint(
+                                            WORDS_IN_OPINION_DESCRIPTION_MIN, WORDS_IN_OPINION_DESCRIPTION_MAX)))
+                                    stars: int = random.randint(
+                                        STARS_MIN, STARS_MAX)
+                                    sql += f"INSERT INTO opinions('id', 'product_id', 'user_id', 'stars', 'description', 'created_at', 'updated_at') VALUES (NULL, {
+                                        product_id}, {user_id}, {stars}, "
+                                    if description is not None:
+                                        sql += f"'{description}'"
+                                    else:
+                                        sql += "NULL"
+                                    sql += f",'{formatted_datetime}', '{
+                                        formatted_datetime}');\n"
+
                                 product_id += 1
                                 price_and_seller.append(
                                     (price, product_id, seller_id))
@@ -97,6 +132,23 @@ if __name__ == "__main__":
                                 company} {count} {item_data[1]}"
                             sql += f"INSERT INTO products('id','name', 'description','price', 'image_path', 'counter', 'sub_category_id', 'seller_id', 'created_at', 'updated_at') VALUES ({product_id},'{
                                 product_name}', '{lorem}', {price}, '{PICTURE}', {counter}, {sub_cat_id}, {seller_id}, '{formatted_datetime}', '{formatted_datetime}');\n"
+
+                            for _ in range(OPINIONS_BY_PRODUCT):
+                                user_id = random.randint(
+                                    USER_ID_START, USER_ID_END)
+                                description: LiteralString | None = None
+                                if random.randint(OPINION_NULL_PROBALITY_MIN, OPINION_NULL_PROBALITY_MAX) > OPINION_NULL_PROBALITY:
+                                    description = ' '.join(random.sample(lorem_splited, k=random.randint(
+                                        WORDS_IN_OPINION_DESCRIPTION_MIN, WORDS_IN_OPINION_DESCRIPTION_MAX)))
+                                stars = random.randint(
+                                    STARS_MIN, STARS_MAX)
+                                sql += f"INSERT INTO opinions('id', 'product_id', 'user_id', 'stars', 'description', 'created_at', 'updated_at') VALUES (NULL, {
+                                    product_id}, {user_id}, {stars}, "
+                                if description is not None:
+                                    sql += f"'{description}'"
+                                else:
+                                    sql += "NULL"
+                                sql += f",'{formatted_datetime}', '{formatted_datetime}');\n"
                             product_id += 1
                             price_and_seller.append(
                                 (price, product_id, seller_id))

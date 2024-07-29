@@ -33,8 +33,8 @@ Project created to learn and practise Laravel.
 | Type          | Email                        | Password |
 | ------------- | ---------------------------- | -------- |
 | Administrator | admin@example.com            | password |
-| Seller        | seller[1,2,3,4]@ example.com | password |
-| User          | user[1,2,3,4]@ example.com   | password |
+| Seller        | s[1,2,3,4,5,6]@example.com   | password |
+| User          | u[1,2,3,4,5,6]@example.com   | password |
 
 see [DatabaseSeeder](/database/seeders/DatabaseSeeder.php).
 

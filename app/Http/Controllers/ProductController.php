@@ -103,7 +103,9 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return view("product.show", ["product" => $product]);
+        $product_with_op = Product::where('id', '=', $product->id)->with('opinions')->first();
+        // dd($product_with_op);
+        return view("product.show", ["product" => $product_with_op]);
     }
 
     /**
