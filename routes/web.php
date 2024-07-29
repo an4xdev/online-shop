@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OpinionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ProductController;
@@ -68,6 +69,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/subcategories', [SubCategoryController::class, 'store'])->name('subcategory.store');
     Route::put('/subcategories/{subcategory}', [SubCategoryController::class, 'update'])->name('subcategory.update');
     Route::delete('/subcategories/{subcategory}', [SubCategoryController::class, 'destroy'])->name('subcategory.destroy');
+
+    // -------------------------- OPINIONS -------------------------------------------
+    Route::get('/opinions/seller', [OpinionController::class, 'showBySeller'])->name('opinions.seller');
+    Route::post('/opinions', [OpinionController::class, 'store'])->name('opinions.store');
+    Route::post('/opinions/report/{opinion}', [OpinionController::class, 'reportOpinion'])->name('opinion.report');
 });
 
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('product.show');

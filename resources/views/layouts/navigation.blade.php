@@ -48,6 +48,9 @@
                              <x-dropdown-link :href="route('product.index', Auth::user())">
                             {{ __('Moje produkty') }}
                             </x-dropdown-link>
+                             <x-dropdown-link :href="route('opinions.seller')">
+                            {{ __('Opinie o produktach') }}
+                            </x-dropdown-link>
                         @endif
 
                         @if(session('role') == 'user')
@@ -135,6 +138,9 @@
                 @if(session('role') == 'seller')
                     <x-dropdown-link :href="route('product.index', Auth::user())">
                     {{ __('Moje produkty') }}
+                    </x-dropdown-link>
+                     <x-dropdown-link :href="route('opinions.seller')">
+                    {{ __('Opinie o produktach') }}
                     </x-dropdown-link>
                 @endif
 

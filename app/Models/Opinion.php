@@ -30,4 +30,9 @@ class Opinion extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    public function reported()
+    {
+        return $this->hasMany(ReportedOpinion::class, 'opinion_id');
+    }
 }
