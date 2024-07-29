@@ -19,13 +19,13 @@
                 </div>
                 <div class='flex'>
                     <div>
-                        <x-bladewind::button tag="a" href="{{route('product.edit', $product)}}" icon='plus-circle' icon_right="true">Edytuj</x-bladewind::button>
+                        <x-bladewind::button tag="a" href="{{route('product.edit', $product)}}" icon='pencil-square' icon_right="true">Edytuj</x-bladewind::button>
                     </div>
                     <div class='ml-4'>
                         <form action="{{route('product.destroy', $product)}}" method="post">
                         @csrf
                         @method('DELETE')
-                        <x-bladewind::button can_submit="true" icon='plus-circle' icon_right="true" color="red">Usuń</x-bladewind::button>
+                        <x-bladewind::button can_submit="true" icon='trash' icon_right="true" color="red">Usuń</x-bladewind::button>
                     </form>
                     </div>
                 </div>

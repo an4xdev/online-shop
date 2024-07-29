@@ -15,13 +15,13 @@
                     </div>
                     <div class='flex'>
                         <div>
-                            <x-bladewind::button tag="a" href="{{route('category.edit', $category)}}" icon='plus-circle' icon_right="true">Edytuj</x-bladewind::button>
+                            <x-bladewind::button tag="a" href="{{route('category.edit', $category)}}" icon='pencil-square' icon_right="true">Edytuj</x-bladewind::button>
                         </div>
                         <div class='ml-4'>
                             <form action="{{route('category.destroy', $category)}}" method="post">
                                 @csrf
                                 @method('DELETE')
-                                <x-bladewind::button can_submit="true" icon='plus-circle' icon_right="true" color="red">Usuń</x-bladewind::button>
+                                <x-bladewind::button can_submit="true" icon='trash' icon_right="true" color="red">Usuń</x-bladewind::button>
                             </form>
                         </div>
                     </div>
@@ -37,13 +37,13 @@
                             </div>
                             <div class='flex'>
                                 <div>
-                                    <x-bladewind::button tag="a" href="#" icon='plus-circle' icon_right="true">Edytuj</x-bladewind::button>
+                                    <x-bladewind::button tag="a" href="#" icon='pencil-square' icon_right="true">Edytuj</x-bladewind::button>
                                 </div>
                                 <div class='ml-4'>
                                     <form action="{{route('subcategory.destroy', $sub)}}" method="post">
                                         @csrf
                                         @method('DELETE')
-                                        <x-bladewind::button can_submit="true" icon='plus-circle' icon_right="true" color="red">Usuń</x-bladewind::button>
+                                        <x-bladewind::button can_submit="true" icon='trash' icon_right="true" color="red">Usuń</x-bladewind::button>
                                     </form>
                                 </div>
                             </div>
