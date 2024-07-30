@@ -21,6 +21,9 @@
                                          <div>
                                             <span class='font-semibold'>Od sprzedawcy:</span> {{ $bySeller->seller->name }}
                                         </div>
+                                        <div>
+                                            <x-bladewind::button tag="a" href="{{route('messages.show', $bySeller)}}" icon="chat-bubble-oval-left-ellipsis" icon_right="true">Czat</x-bladewind::button>
+                                        </div>
                                     </div>
                                 </x-slot:header>
                                 <div class="grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-1 gap-4 p-4">

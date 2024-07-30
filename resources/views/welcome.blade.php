@@ -7,7 +7,6 @@
         </x-bladewind::centered-content>
         {{-- items --}}
         <x-bladewind::centered-content size="xxl">
-            <a href="{{route('messages.show', 1)}}">foo</a>
             <div class="grid lg:grid-cols-2 sm:grid-cols-1 md:grid-cols-1 gap-10">
                 @foreach($randomProducts as $product)
                 <x-product-component :product="$product"/>

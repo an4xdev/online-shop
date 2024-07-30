@@ -11,6 +11,9 @@
                             <span class='font-semibold'>Data:</span> {{ \Carbon\Carbon::parse($bySeller->purchase->date)->isoFormat('D MMMM YYYY') }}
                         </div>
                         <div>
+                            <x-bladewind::button tag="a" href="{{route('messages.show', $bySeller)}}" icon="chat-bubble-oval-left-ellipsis" icon_right="true">Czat</x-bladewind::button>
+                        </div>
+                        <div>
                             <span class='font-semibold'>Zapłacona kwota:</span> {{$bySeller->purchase->total_price}} zł
                         </div>
                     </div>

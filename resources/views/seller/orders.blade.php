@@ -14,6 +14,9 @@
                         <div>
                             <span class="font-semibold">Kwota: </span>{{$purchase->purchase->total_price}} zł
                         </div>
+                        <div>
+                            <x-bladewind::button tag="a" href="{{route('messages.show', $purchase)}}" icon="chat-bubble-oval-left-ellipsis" icon_right="true">Czat</x-bladewind::button>
+                        </div>
                     </div>
                 </x-bladewind::card>
                 <x-bladewind::card class='my-2 p-4' title="Zmień status zamówienia">

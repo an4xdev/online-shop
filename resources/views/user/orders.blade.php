@@ -31,6 +31,9 @@
                                                 </form>
                                             </div>
                                         @endif
+                                        <div>
+                                            <x-bladewind::button tag="a" href="{{route('messages.show', $bySeller)}}" icon="chat-bubble-oval-left-ellipsis" icon_right="true">Czat</x-bladewind::button>
+                                        </div>
                                          <div>
                                             <span class='font-semibold'>Od sprzedawcy:</span> {{ $bySeller->seller->name }}
                                         </div>
