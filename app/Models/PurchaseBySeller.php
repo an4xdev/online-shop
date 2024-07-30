@@ -34,4 +34,9 @@ class PurchaseBySeller extends Model
     {
         return $this->belongsTo(DeliveryMethod::class, 'delivery_method_id');
     }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'purchase_by_seller_id');
+    }
 }

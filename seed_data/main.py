@@ -39,6 +39,7 @@ OPINION_NULL_PROBALITY_MAX: int = 10
 OPINION_NULL_PROBALITY: int = 3
 WORDS_IN_OPINION_DESCRIPTION_MIN: int = 5
 WORDS_IN_OPINION_DESCRIPTION_MAX: int = 50
+MESSAGES_BY_PURCHASE_BY_SELLER: int = 4
 
 if __name__ == "__main__":
 
@@ -60,12 +61,14 @@ if __name__ == "__main__":
     lorem_splited: List[LiteralString] = lorem.split(" ")
     assert len(
         lorem_splited) > WORDS_IN_OPINION_DESCRIPTION_MAX, "words in opinion description must be less than len of lorem splitted by \" \""
+
+    assert MESSAGES_BY_PURCHASE_BY_SELLER % 2 == 0, "Messages count must be even (user and seller sends messages and responses)"
     current_datetime: datetime = datetime.now()
 
     formatted_datetime: str = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
 
     with open("data.sql", "w", encoding="utf-8") as file:
-        sql: str = ""
+        sql: str = "BEGIN TRANSACTION;\n"
         sub_cat_id: int = 1
         cat_id: int = 1
         price_and_seller: List[Tuple[float, int, int]] = []
@@ -214,9 +217,21 @@ if __name__ == "__main__":
                         sql += f"INSERT INTO purchase_products('id', 'purchase_by_seller_id', 'product_id', 'counter', 'created_at', 'updated_at') VALUES (NULL, {
                             purchase_by_seller_id}, {random_item[1]}, {counter}, '{cudate}', '{cudate}');\n"
 
+                    for m in range(MESSAGES_BY_PURCHASE_BY_SELLER):
+                        text = ' '.join(random.sample(lorem_splited, k=random.randint(
+                            WORDS_IN_OPINION_DESCRIPTION_MIN, WORDS_IN_OPINION_DESCRIPTION_MAX)))
+                        sql += f"INSERT INTO messages ('id', 'text', 'purchase_by_seller_id', 'sender_id', 'created_at', 'updated_at') VALUES(NULL, '{
+                            text}', {purchase_by_seller_id}, "
+                        if m % 2 == 0:
+                            sql += f"{seller}, "
+                        else:
+                            sql += f"{user_id}, "
+                        sql += f"'{cudate}', '{cudate}');\n"
+
                     purchase_by_seller_id += 1
                 total_price = round(total_price, 2)
                 sql += f"UPDATE purchases SET total_price = {
                     total_price} WHERE id = {purchase_id};\n"
                 purchase_id += 1
+        sql += "COMMIT;"
         file.write(sql)

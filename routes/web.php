@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\OpinionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\OpinionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SessionController;
@@ -78,6 +79,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/opinions/report/{opinion}', [OpinionController::class, 'reportOpinion'])->name('opinion.report');
     Route::delete('/opinions/delete/{opinion}', [OpinionController::class, 'destroy'])->name('opinion.destroy');
     Route::delete('/opinion/cancel/{opinion}', [OpinionController::class, 'cancel_report'])->name('opinion.cancel');
+
+    // -------------------------- MESSAGES -------------------------------------------
+
+    Route::get('/messages/{purchase_by_seller}', [MessageController::class, 'showByPurchase'])->name('messages.show');
+    Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
 });
 
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('product.show');
