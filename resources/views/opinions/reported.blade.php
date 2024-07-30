@@ -21,11 +21,22 @@
                 <br>
             </p>
             <x-bladewind::rating rating="{{$reported_op->opinion->stars}}" color="yellow" clickable="false"/>
-            <form action="{{route('opinion.destroy', $reported_op)}}" method="post">
-                @csrf
-                @method('DELETE')
-                 <x-bladewind::button can_submit='true' icon='trash' icon_right="true" color='red'>Usuń opinie</x-bladewind::button>
-            </form>
+            <div class='flex'>
+                <div class='mr-4'>
+                    <form action="{{route('opinion.destroy', $reported_op)}}" method="post">
+                        @csrf
+                        @method('DELETE')
+                         <x-bladewind::button can_submit='true' icon='trash' icon_right="true" color='red'>Usuń opinie</x-bladewind::button>
+                    </form>
+                </div>
+                <div>
+                    <form action="{{route('opinion.cancel', $reported_op)}}" method="post">
+                        @csrf
+                        @method('DELETE')
+                         <x-bladewind::button can_submit='true' icon='x-circle' icon_right="true">Anuluj zgłoszenie</x-bladewind::button>
+                    </form>
+                </div>
+            </div>
         </x-bladewind::card>
         @endforeach
         <div class='my-4'>

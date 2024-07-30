@@ -76,7 +76,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/opinions/reported', [OpinionController::class, 'showReported'])->name('opinions.reported');
     Route::post('/opinions', [OpinionController::class, 'store'])->name('opinions.store');
     Route::post('/opinions/report/{opinion}', [OpinionController::class, 'reportOpinion'])->name('opinion.report');
-    Route::delete('/opinions/{opinion}', [OpinionController::class, 'destroy'])->name('opinion.destroy');
+    Route::delete('/opinions/delete/{opinion}', [OpinionController::class, 'destroy'])->name('opinion.destroy');
+    Route::delete('/opinion/cancel/{opinion}', [OpinionController::class, 'cancel_report'])->name('opinion.cancel');
 });
 
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('product.show');

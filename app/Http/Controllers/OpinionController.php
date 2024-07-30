@@ -92,4 +92,10 @@ class OpinionController extends Controller
         $op->delete();
         return back();
     }
+
+    public function cancel_report(ReportedOpinion $opinion)
+    {
+        $opinion->delete();
+        return back();
+    }
 }
