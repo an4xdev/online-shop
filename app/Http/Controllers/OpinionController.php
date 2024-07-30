@@ -30,6 +30,17 @@ class OpinionController extends Controller
         return back();
     }
 
+    public function showByAdmin()
+    {
+        $user = User::where("id", auth()->id())->first();
+        $role_id = $user->role->id;
+        if ($role_id != 1) {
+            abort(403, "Tylko administrator może zobaczyć wszystkie opinie o produtkach");
+        }
+        $products = Product::with('opinions')->paginate(12);
+        return view('opinions.admin', compact('products'));
+    }
+
     public function showBySeller()
     {
         $user = User::where("id", auth()->id())->first();

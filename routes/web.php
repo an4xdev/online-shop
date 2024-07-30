@@ -72,6 +72,7 @@ Route::middleware('auth')->group(function () {
 
     // -------------------------- OPINIONS -------------------------------------------
     Route::get('/opinions/seller', [OpinionController::class, 'showBySeller'])->name('opinions.seller');
+    Route::get('/opinions/admin', [OpinionController::class, 'showByAdmin'])->name('opinions.admin');
     Route::post('/opinions', [OpinionController::class, 'store'])->name('opinions.store');
     Route::post('/opinions/report/{opinion}', [OpinionController::class, 'reportOpinion'])->name('opinion.report');
 });

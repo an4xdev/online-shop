@@ -46,32 +46,35 @@
 
                          @if(session('role') == 'seller')
                              <x-dropdown-link :href="route('product.index', Auth::user())">
-                            {{ __('Moje produkty') }}
+                                {{ __('Moje produkty') }}
                             </x-dropdown-link>
                              <x-dropdown-link :href="route('opinions.seller')">
-                            {{ __('Opinie o produktach') }}
+                                {{ __('Opinie o produktach') }}
                             </x-dropdown-link>
                         @endif
 
                         @if(session('role') == 'user')
                              <x-dropdown-link :href="route('cart.index')">
-                            {{ __('Mój koszyk') }}
+                                {{ __('Mój koszyk') }}
                             </x-dropdown-link>
                         @endif
 
                         @if (session('role') != "admin")
                              <x-dropdown-link :href="route('order.user',  Auth::user())">
-                                    {{ __('Moje zamówienia') }}
+                                {{ __('Moje zamówienia') }}
                             </x-dropdown-link>
 
                             <x-dropdown-link :href="route('purchase.user',  Auth::user())">
-                                        {{ __('Moje zakupy') }}
+                                {{ __('Moje zakupy') }}
                             </x-dropdown-link>
                         @endif
 
                         @if (session('role') == "admin")
                             <x-dropdown-link :href="route('category.index')">
-                                    {{ __('Kategorie') }}
+                                {{ __('Kategorie') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('opinions.admin')">
+                                {{ __('Wszystkie opinie') }}
                             </x-dropdown-link>
                         @endif
 
@@ -137,32 +140,35 @@
 
                 @if(session('role') == 'seller')
                     <x-dropdown-link :href="route('product.index', Auth::user())">
-                    {{ __('Moje produkty') }}
+                        {{ __('Moje produkty') }}
                     </x-dropdown-link>
                      <x-dropdown-link :href="route('opinions.seller')">
-                    {{ __('Opinie o produktach') }}
+                        {{ __('Opinie o produktach') }}
                     </x-dropdown-link>
                 @endif
 
                 @if(session('role') == 'user')
                     <x-dropdown-link :href="route('cart.index')">
-                    {{ __('Mój koszyk') }}
+                        {{ __('Mój koszyk') }}
                     </x-dropdown-link>
                 @endif
 
                 @if (session('role') != "admin")
                     <x-dropdown-link :href="route('order.user',  Auth::user())">
-                            {{ __('Moje zamówienia') }}
+                        {{ __('Moje zamówienia') }}
                     </x-dropdown-link>
 
                     <x-dropdown-link :href="route('purchase.user',  Auth::user())">
-                                {{ __('Moje zakupy') }}
+                        {{ __('Moje zakupy') }}
                     </x-dropdown-link>
                 @endif
 
                 @if (session('role') == "admin")
                     <x-dropdown-link :href="route('category.index')">
-                            {{ __('Kategorie') }}
+                        {{ __('Kategorie') }}
+                    </x-dropdown-link>
+                     <x-dropdown-link :href="route('opinions.admin')">
+                        {{ __('Wszystkie opinie') }}
                     </x-dropdown-link>
                 @endif
 
