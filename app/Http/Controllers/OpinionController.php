@@ -50,7 +50,13 @@ class OpinionController extends Controller
         if ($role_id != 2) {
             abort(403, 'Tylko sprzedawca może zgłaszać opinie');
         }
-        // TODO: opinions of products of seller
+
+        $products = Product::where('seller_id', '=', auth()->id())->with('opinions')->join('opinions', 'products.id', '=', 'opinions.product_id')->where('opinions.id', '=', $opinion->id)->get();
+
+        if (count($products) == 0) {
+            abort(403, 'Sprzedawca może zgłaszać opinie tylko do swoich produktów');
+        }
+
         ReportedOpinion::create(['opinion_id' => $opinion->id]);
 
         return back();
