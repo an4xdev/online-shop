@@ -76,6 +76,9 @@
                             <x-dropdown-link :href="route('opinions.admin')">
                                 {{ __('Wszystkie opinie') }}
                             </x-dropdown-link>
+                            <x-dropdown-link :href="route('opinions.reported')">
+                                {{ __('Zgłoszone opinie') }}
+                            </x-dropdown-link>
                         @endif
 
                         <!-- Authentication -->
@@ -169,6 +172,9 @@
                     </x-dropdown-link>
                      <x-dropdown-link :href="route('opinions.admin')">
                         {{ __('Wszystkie opinie') }}
+                    </x-dropdown-link>
+                    <x-dropdown-link :href="route('opinions.reported')">
+                        {{ __('Zgłoszone opinie') }}
                     </x-dropdown-link>
                 @endif
 

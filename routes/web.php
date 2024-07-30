@@ -73,8 +73,10 @@ Route::middleware('auth')->group(function () {
     // -------------------------- OPINIONS -------------------------------------------
     Route::get('/opinions/seller', [OpinionController::class, 'showBySeller'])->name('opinions.seller');
     Route::get('/opinions/admin', [OpinionController::class, 'showByAdmin'])->name('opinions.admin');
+    Route::get('/opinions/reported', [OpinionController::class, 'showReported'])->name('opinions.reported');
     Route::post('/opinions', [OpinionController::class, 'store'])->name('opinions.store');
     Route::post('/opinions/report/{opinion}', [OpinionController::class, 'reportOpinion'])->name('opinion.report');
+    Route::delete('/opinions/{opinion}', [OpinionController::class, 'destroy'])->name('opinion.destroy');
 });
 
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('product.show');

@@ -54,6 +54,19 @@ class OpinionController extends Controller
         return view('opinions.seller', compact('products'));
     }
 
+    public function showReported()
+    {
+        $user = User::where('id', auth()->id())->first();
+        $role_id = $user->role->id;
+        if ($role_id != 1) {
+            abort(403, 'Tylko administrator może zobaczyć wszystkie zgłoszone opinie.');
+        }
+
+        $reported = ReportedOpinion::with('opinion')->paginate(12);
+
+        return view('opinions.reported', compact('reported'));
+    }
+
     public function reportOpinion(Opinion $opinion)
     {
         $user = User::where('id', auth()->id())->first();
@@ -70,6 +83,13 @@ class OpinionController extends Controller
 
         ReportedOpinion::create(['opinion_id' => $opinion->id]);
 
+        return back();
+    }
+
+    public function destroy(ReportedOpinion $opinion)
+    {
+        $op = Opinion::findOrFail($opinion->opinion->id);
+        $op->delete();
         return back();
     }
 }
