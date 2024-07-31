@@ -1,4 +1,5 @@
 
+- [TODO if I ever want to come back](#todo-if-i-ever-want-to-come-back)
 - [Project](#project)
 - [Used](#used)
 - [Requirements](#requirements)
@@ -9,6 +10,12 @@
   - [Run separately](#run-separately)
 
 # Online shop project
+
+## TODO if I ever want to come back
+
+- [ ] Modals
+- [ ] Buy again button implementation
+- [ ] Controller separations and refactoring
 
 ## Project
 
